@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib uri="/struts-tags" prefix="s"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -65,11 +64,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<div class="container">
 						<h1>500</h1>
                         <p>页面出错了(○´･д･)ﾉ        o(>﹏<)o不要啊      (°ー°〃)</p>
-                        <a href="toProductList"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>返回主页</a>
+                        <a href="<%=path %>/toProductList"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>返回主页</a>
 					</div>
 				</div>
 			</div><!-- /content -->
-			<jsp:include page="new_front/foot.jsp"></jsp:include>
+			<jsp:include page="foot.jsp"></jsp:include>
 		</div><!-- /page -->
 	</body>
 </html>

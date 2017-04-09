@@ -29,14 +29,38 @@
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>
 	<!-- ****************编码过滤end ****************************** -->
+	
 	<!-- spring的启动配置 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
+	
+	<!-- Spring监听器 -->  
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<!-- 防止Spring内存溢出监听器 -->  
+    <listener>  
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>  
+    </listener>
+    
+    <!-- Spring MVC servlet -->  
+    <servlet>  
+        <servlet-name>SpringMVC</servlet-name>  
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+        <init-param>  
+            <param-name>contextConfigLocation</param-name>  
+            <param-value>classpath:spring-mvc.xml</param-value>  
+        </init-param>  
+        <load-on-startup>1</load-on-startup>  
+        <async-supported>true</async-supported>  
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>SpringMVC</servlet-name>  
+        <!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->  
+        <url-pattern>/</url-pattern>  
+    </servlet-mapping>  
 
 	<!-- session已关闭异常的配置 -->
 	<filter>
@@ -47,21 +71,11 @@
 		<filter-name>OpenSessionInViewFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	
 	<welcome-file-list>
 		<welcome-file>/index.jsp</welcome-file>
 	</welcome-file-list>
-	<filter>
-		<filter-name>struts2</filter-name>
-		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
-		<init-param>
-			<param-name>filterConfig</param-name>
-			<param-value>classpath:struts.xml</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>struts2</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 
 	<!-- =======================Log4j begin ====================== -->
 	<context-param>
@@ -82,15 +96,15 @@
 	<!-- =================================Log4j end ============================ -->
 	<!-- ==========================初始化数据库listener begin================================== -->
 	<listener>
-		<listener-class>com.listener.InitListener</listener-class>
+		<listener-class>com.zeral.listener.InitListener</listener-class>
 	</listener>
 	<!-- ==========================初始化数据库listener end================================== -->
 	<error-page>
 		<error-code>404</error-code>
-		<location>/404.jsp</location>
+		<location>/WEB-INF/jsp/404.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/error.jsp</location>
+		<location>/WEB-INF/jsp/error.jsp</location>
 	</error-page>
 </web-app>

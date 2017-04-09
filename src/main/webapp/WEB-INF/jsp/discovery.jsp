@@ -28,7 +28,7 @@
 			<ul class="list-group">
 				<c:forEach items="${schoolInfolst }" var="schoolInfo">
 					<li class="list-group-item">
-						<a href="toSchoolInfoProduct?schoolInfoId=${schoolInfo.schoolInfoId }">
+						<a href="toDiscovery/${schoolInfo.schoolInfoId }">
 							${schoolInfo.name }	
 						</a>
 					</li>

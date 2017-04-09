@@ -1,5 +1,7 @@
 package com.zeral.service;
 
+import java.util.List;
+
 /**
  * 分页信息接口
  * @author Zeral
@@ -53,5 +55,11 @@ public interface IPageInfo {
 	 * @date 2016-01-08
 	 */
 	void setOffset(int offset);
+
+	/**
+	 * 给分页对象设置数据
+	 * @param lsemp
+	 */
+	void setPagelist(List<?> lsemp);
 
 }

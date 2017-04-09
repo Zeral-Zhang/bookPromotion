@@ -1,5 +1,7 @@
 package com.zeral.action;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用于用户请求处理，包括用户授权，模拟用户登陆
  * 
@@ -45,7 +47,7 @@ public interface IUserAction {
 	 * 用户授权登陆
 	 * @return
 	 */
-	String validateUser();
+	String validateUser(HttpServletRequest request, String path);
 
 	/**
 	 * 初始化用户正在售卖页面

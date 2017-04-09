@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlDataInitInfo initCode="base-sqldata-versions">
+	<executeInfo updateVersion="1.0">
+	<!-- <sqlPath>sql/base/create_table_mysql.sql</sqlPath> -->
+	</executeInfo>
+</sqlDataInitInfo>

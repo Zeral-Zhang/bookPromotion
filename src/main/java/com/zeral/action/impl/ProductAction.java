@@ -4,246 +4,139 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bean.PageBean;
-import com.constant.WenlibackyardConstant;
-import com.po.ProductInfo;
-import com.po.ProductType;
-import com.service.biz.BizService;
-import com.util.HttpsUtil;
-import com.util.WebUtil;
 import com.zeral.action.IProductAction;
+import com.zeral.bean.PageBean;
+import com.zeral.constant.WenlibackyardConstant;
+import com.zeral.po.ProductInfo;
+import com.zeral.po.ProductType;
+import com.zeral.service.IProductInfoService;
+import com.zeral.service.IProductTypeService;
+import com.zeral.service.IUserService;
+import com.zeral.util.HttpsUtil;
+import com.zeral.util.WebUtil;
 
 
 @Controller
-@Namespace("/")
 public class ProductAction extends BaseAction implements IProductAction {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-	@Resource(name = "BizService")
-	private BizService bizs;
-	private ProductInfo productInfo;
-	private String productId;
-	private List<String> fileSrcs;
-	private String search;
-	private String productTypeId;
-	private ProductType productType;
-	private String schoolInfoId;
+	
+	@Autowired
+	private IProductInfoService productInfoService;
+	@Autowired
+	private IProductTypeService productTypeService;
+	@Autowired
+	private IUserService userService;
 
-	private PageBean pageBean;
-
-	@Action(value = "toProductAdd", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/productAdd.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
-	public String toProductAdd() {
+	@Override
+	@RequestMapping(value="/toProductAdd", method = RequestMethod.GET)
+	public String toProductAdd(HttpServletResponse response) {
 		try {
 			if (null == super.getLoginUser()) {
-				getResponse().sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserInfo"));
+				response.sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserInfo"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
-		return "success";
+		return "productAdd";
 	}
 
-	@Action(value = "addProduct", results = { @Result(name = "success", location = "toProductList", type = "redirectAction"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
 	@Override
-	public String addProduct() {
+	@RequestMapping(value="/productAdd", method = RequestMethod.POST)
+	public String addProduct(ProductInfo productInfo, List<String> fileSrcs) {
 		try {
 			// 添加商品发布日期
 			productInfo.setPbDate(new Date());
 			// 给商品添加用户信息
 			productInfo.setUserInfoId(getLoginUser().getUserId());
 			productInfo.setFileSrcs(fileSrcs);
-			bizs.getProductInfobiz().save(productInfo);
+			productInfoService.save(productInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
-		return "success";
+		return "redirect:/toProductList";
 	}
 
-	@Action(value = "init_ProductType")
 	@Override
+	@RequestMapping(value = "/initProductType", method = RequestMethod.GET)
 	public void initProductType() {
 		try {
-			List<ProductType> productTypelst = bizs.getProductTypebiz().findProuctType();
+			List<ProductType> productTypelst = productTypeService.findAll();
 			WebUtil.sendJSONArrayResponse(productTypelst, new String[] { "productInfos" });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Action(value = "toProductList", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/productList.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp")
-			})
 	@Override
-	public String toProductList() {
-		/*if (null == getLoginUser()) {
-			getRequest().setAttribute("originURL", "toProductList");
-			return "login";
-		}*/
+	@RequestMapping(value = "/toProductList", method = RequestMethod.GET)
+	public String toProductList(PageBean pageBean, String search, Model model) {
 		try {
-			pageBean = pageBean == null ? new PageBean() : pageBean;
-
 			List<ProductInfo> lsemp = null;
 			if(StringUtils.isNotBlank(search)) {
-				lsemp = bizs.getProductInfobiz().findByNameLike(pageBean, search);
+				lsemp = productInfoService.findByNameLike(pageBean, search);
 			} else {
 				// 获取当前页的记录集合
-				lsemp = bizs.getProductInfobiz().findAll(pageBean, Order.desc("pbDate"));
+				lsemp = productInfoService.findAll(pageBean, Order.desc("pbDate"));
 			}
 			// 封装数据到PageBean
 			pageBean.setPagelist(lsemp);
+			model.addAttribute(pageBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
-		return "success";
+		return "productList";
 	}
 	
-	@Action(value = "toProductCateList", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/productCateList.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp")
-			})
 	@Override
-	public String toProductCateList() {
+	@RequestMapping(value = "/toProductCateList/{productTypeId}", method = RequestMethod.GET)
+	public String toProductCateList(PageBean pageBean, @PathVariable String productTypeId, String search, Model model) {
 		try {
-			pageBean = pageBean == null ? new PageBean() : pageBean;
-			
 			List<ProductInfo> lsemp = null;
 			if(StringUtils.isNotBlank(search)) {
-				lsemp = bizs.getProductInfobiz().findByTypeAndNameLike(pageBean, productTypeId, search);
+				lsemp = productInfoService.findByTypeAndNameLike(pageBean, productTypeId, search);
 			} else {
 				// 获取当前页的记录集合
-				lsemp = bizs.getProductInfobiz().findByType(pageBean, productTypeId);
+				lsemp = productInfoService.findByType(pageBean, productTypeId);
 			}
 			// 封装数据到PageBean
 			pageBean.setPagelist(lsemp);
-			productType = bizs.getProductTypebiz().findById(productTypeId);
+			ProductType productType = productTypeService.findById(productTypeId);
+			model.addAttribute(productType).addAttribute(pageBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
-		return "success";
+		return "productCateList";
 	}
 
-	@Action(value = "toProductDetail", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/productDetail.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
 	@Override
-	public String toProductDetail() {
+	@RequestMapping(value="/toProductDetail/{productId}")
+	public String toProductDetail(@PathVariable String productId, Model model) {
 		try {
 			if (null != productId) {
-				productInfo = bizs.getProductInfobiz().findDetail(productId);
-				productInfo.setUserInfo(bizs.getUserbiz().findByOpenId(productInfo.getUserInfoId()));
+				ProductInfo productInfo = productInfoService.findDetail(productId);
+				productInfo.setUserInfo(userService.findByOpenId(productInfo.getUserInfoId()));
+				model.addAttribute(productInfo);
 			}
-			return "success";
+			return "productDetail";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
 	}
-	
-	@Action(value = "toSchoolInfoProduct", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/collegeProductList.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
-	@Override
-	public String toSchoolInfoProduct() {
-		try {
-			pageBean = pageBean == null ? new PageBean() : pageBean;
-
-			List<ProductInfo> lsemp = null;
-			if(null != search) {
-				/*lsemp = bizs.getProductInfobiz().findByUserSchoolInfoIdAndNameLike(pageBean, search);*/
-			} else {
-				// 获取当前页的记录集合
-				lsemp = bizs.getProductInfobiz().findByUserSchoolInfoId(pageBean, schoolInfoId);
-			}
-			// 封装数据到PageBean
-			pageBean.setPagelist(lsemp);
-			return "success";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "failed";
-		}
-	}
-
-	public ProductInfo getProductInfo() {
-		return productInfo;
-	}
-
-	public void setProductInfo(ProductInfo productInfo) {
-		this.productInfo = productInfo;
-	}
-
-	public PageBean getPageBean() {
-		return pageBean;
-	}
-
-	public void setPageBean(PageBean pageBean) {
-		this.pageBean = pageBean;
-	}
-
-	public String getProductId() {
-		return productId;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-
-	public List<String> getFileSrcs() {
-		return fileSrcs;
-	}
-
-	public void setFileSrcs(List<String> fileSrcs) {
-		this.fileSrcs = fileSrcs;
-	}
-
-	public String getSearch() {
-		return search;
-	}
-
-	public void setSearch(String search) {
-		this.search = search;
-	}
-
-	public String getProductTypeId() {
-		return productTypeId;
-	}
-
-	public void setProductTypeId(String productTypeId) {
-		this.productTypeId = productTypeId;
-	}
-
-	public ProductType getProductType() {
-		return productType;
-	}
-
-	public void setProductType(ProductType productType) {
-		this.productType = productType;
-	}
-
-	public String getSchoolInfoId() {
-		return schoolInfoId;
-	}
-
-	public void setSchoolInfoId(String schoolInfoId) {
-		this.schoolInfoId = schoolInfoId;
-	}
-	
 }

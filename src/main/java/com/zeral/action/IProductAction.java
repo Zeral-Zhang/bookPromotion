@@ -1,11 +1,22 @@
 package com.zeral.action;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
+
+import com.zeral.bean.PageBean;
+import com.zeral.po.ProductInfo;
+
 public interface IProductAction {
 	/**
 	 * 添加商品，添加成功返回商品列表界面
+	 * @param productInfo 表单的商品信息
+	 * @param fileSrcs 图片附件的上传地址信息
 	 * @return
 	 */
-	public String addProduct();
+	public String addProduct(ProductInfo productInfo, List<String> fileSrcs);
 	
 	/**
 	 * 初始化商品类别信息
@@ -14,25 +25,32 @@ public interface IProductAction {
 	public void initProductType();
 	
 	/**
-	 * 初始化商品信息
+	 * 加载商品列表信息
+	 * @param pageBean 分页对象
+	 * @param search 查询字段
+	 * @return
 	 */
-	public String toProductList();
+	public String toProductList(PageBean pageBean, String search, Model model);
 	
 	/**
 	 * 查找商品详细信息
 	 * @return
 	 */
-	public String toProductDetail();
+	public String toProductDetail(String productId, Model model);
 
 	/**
 	 * 查找某个类别的商品列表
+	 * @param pageBean 分页对象
+	 * @param search 查询字段
+	 * @param productTypeId 商品类别id
 	 * @return
 	 */
-	public String toProductCateList();
+	public String toProductCateList(PageBean pageBean, String productTypeId, String search, Model model);
 
 	/**
-	 * 初始化某个学院的商品列表
+	 * 到商品添加页面
+	 * @param response
 	 * @return
 	 */
-	public String toSchoolInfoProduct();
+	String toProductAdd(HttpServletResponse response);
 }

@@ -31,10 +31,15 @@
 			<!-- 商品卡片 -->
 			<div class="mid_card">
 				<div class="row card-group">
+					<c:if test="${empty pageBean.pagelist}">
+						<div class="container">
+	                        <p>没有商品数据呦(○´･д･)ﾉ        o(>﹏<)o不要啊      (°ー°〃)</p>
+						</div>
+					</c:if>
 					<c:forEach items="${pageBean.pagelist}" var="product">
 						<div class="col-md-3 col-xs-6">
 							<div class="card">
-								<a href="${pageContext.request.contextPath}/toProductDetail?productId=${product.productId}">
+								<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}">
 									<div class="card_img">
 										<img class="card-img-top center-block"
 											src="<%=path%>${product.fileSrcs[0]}"
@@ -51,7 +56,7 @@
 				</div>
 				<!-- 分页插件 -->
 				<div id="pagination">
-					<a href="toSchoolInfoProduct.action?pageBean.page=${pageBean.page+1}&schoolInfoId=${schoolInfoId}" class="next">next</a>
+					<a href="<%=path %>/toDiscovery/${schoolInfoId}/?page=${pageBean.page+1}" class="next">next</a>
 				</div>
 			</div>
 			<div class="clearfix"></div>

@@ -47,7 +47,7 @@
 					<c:forEach items="${pageBean.pagelist}" var="product">
 						<div class="col-md-3 col-xs-6">
 							<div class="card">
-								<a href="${pageContext.request.contextPath}/toProductDetail?productId=${product.productId}">
+								<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}">
 									<div class="card_img">
 										<img class="card-img-top center-block"
 											src="<%=path%>${product.fileSrcs[0]}"
@@ -64,7 +64,7 @@
 				</div>
 				<!-- 分页插件 -->
 				<div id="pagination">
-					<a href="toProductCateList.action?pageBean.page=${pageBean.page+1}&productTypeId=${productTypeId}&search=${search}" class="next">next</a>
+					<a href="<%=path %>/toProductCateList/${productTypeId}?page=${pageBean.page+1}&search=${search}" class="next">next</a>
 				</div>
 			</div>
 			<div class="clearfix"></div>
@@ -88,7 +88,7 @@
 		$('.search_btn').click(function() {
 			var search = $(this).closest('.input-group').children("input").val();
 			if(search.length != 0) {
-				window.location.href = '${pageContext.request.contextPath}/toProductCateList.action?productTypeId=${productTypeId}&search='+search;
+				window.location.href = '${pageContext.request.contextPath}/toProductCateList/${productTypeId}?search='+search;
 				var pageA = $('#pagination > a');
 				pageA.attr("href", pageA.href+"?search="+search);
 			} else {

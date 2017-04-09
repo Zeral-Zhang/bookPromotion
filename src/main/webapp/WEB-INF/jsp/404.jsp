@@ -22,8 +22,9 @@
 		<link rel="shortcut icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 		<!-- //for-mobile-apps -->
-		<link href="<%=path %>/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="<%=path %>/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="<%=path %>/css/style.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="<%=path %>/css/reset.css" rel="stylesheet" type="text/css" media="all" />
         <style>
 			.findout{
 				padding:90px 0;
@@ -66,7 +67,7 @@
 					</div>
 				</div>
 			</div><!-- /content -->
-			<jsp:include page="new_front/foot.jsp"></jsp:include>
+			<jsp:include page="foot.jsp"></jsp:include>
 		</div><!-- /page -->
 	</body>
 </html>

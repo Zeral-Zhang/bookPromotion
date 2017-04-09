@@ -110,7 +110,7 @@
 				        </div>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" id="addCar" class="btn btn-success btn-default pull-left"><span class="glyphicon glyphicon-shopping-cart"></span>确认</button>
+					<button type="submit" id="addToCar" class="btn btn-success btn-default pull-left"><span class="glyphicon glyphicon-shopping-cart"></span>确认</button>
 					<button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>取消</button>
 				</div>
 			</div>

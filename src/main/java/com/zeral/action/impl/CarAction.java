@@ -4,9 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Result;
-import org.simpleframework.xml.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,16 +13,17 @@ import com.zeral.action.ICarAction;
 import com.zeral.bean.MyCar;
 import com.zeral.bean.ShopCarItem;
 import com.zeral.po.ProductInfo;
+import com.zeral.service.IProductInfoService;
 import com.zeral.util.WebUtil;
 
 @Controller
-@RequestMapping("/")
 public class CarAction implements ICarAction {
-	private String productId;
-	private Integer num;
 
-	@RequestMapping(value = "/add_Car", method = RequestMethod.GET)
-	public String add() {
+	@Autowired
+	private IProductInfoService productInfoService;
+	
+	@RequestMapping(value = "/addToCar", method = RequestMethod.GET)
+	public String add(String productId, Integer num) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");
@@ -33,7 +32,7 @@ public class CarAction implements ICarAction {
 				WebUtil.getSession().setAttribute("mycar", car);
 			}
 			if (productId != null) {
-				ProductInfo productInfo = bizs.getProductInfobiz().findDetail(productId);
+				ProductInfo productInfo = productInfoService.findDetail(productId);
 				Map<String, ShopCarItem> items = car.add(productInfo, num);
 				car.setItems(items);
 				car.sumPrice();
@@ -46,16 +45,14 @@ public class CarAction implements ICarAction {
 
 	}
 
-	@Action(value = "shopCar", results = { 
-			@Result(name = "success", location = "/WEB-INF/new_front/shopCar.jsp") 
-		})
+	@RequestMapping(value = "/toShopCar", method = RequestMethod.GET)
 	public String initShopCar() {
-		return "success";
+		return "shopCar";
 	}
 
-	@Action(value = "removeFromCar")
+	@RequestMapping(value = "removeFromCar")
 	@Override
-	public void removeFromCar() {
+	public void removeFromCar(String productId) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");
@@ -74,46 +71,23 @@ public class CarAction implements ICarAction {
 		}
 	}
 
-	@Action(value = "changeQuantity", results = { 
-			@Result(name = "success", location = "/WEB-INF/new_front/shopCar.jsp") 
-		})
+	@RequestMapping(value = "changeQuantity", method = RequestMethod.GET)
 	@Override
-	public String changeQuantity() {
+	public String changeQuantity(String productId, Integer num) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");
-			/*if (car == null) {
-				WebUtil.sendInfoMsg("购物车为空");
-				return;
-			}*/
 			if (productId != null) {
-				ProductInfo product = bizs.getProductInfobiz().findDetail(productId);
+				ProductInfo product = productInfoService.findDetail(productId);
 				Map<String, ShopCarItem> items = car.add(product, num);
 				car.setItems(items);
 				car.sumPrice();
 				session.setAttribute("mycar", car);
 			}
-			return "success"; 
+			return "shopCar"; 
 		} catch (Exception e) {
-//			WebUtil.sendErrorMsg("修改商品数量出错");
-			return "failed";
+			return "error";
 		}
-	}
-
-	public String getProductId() {
-		return productId;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-
-	public Integer getNum() {
-		return num;
-	}
-
-	public void setNum(Integer num) {
-		this.num = num;
 	}
 
 }

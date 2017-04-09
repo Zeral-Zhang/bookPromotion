@@ -2,15 +2,12 @@ package com.zeral.action.impl;
 
 import java.io.File;
 
-import javax.annotation.Resource;
-
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.po.FileInfo;
-import com.service.biz.BizService;
-import com.util.WebUtil;
+import com.zeral.po.FileInfo;
+import com.zeral.service.IFileInfoService;
+import com.zeral.util.WebUtil;
 
 /**
  * 处理文件action
@@ -19,24 +16,20 @@ import com.util.WebUtil;
  *
  */
 @Controller
-@Namespace("/")
 public class FileAction extends BaseAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	@Resource(name = "BizService")
-	private BizService bizs;
+	
+	@Autowired
+	private IFileInfoService fileInfoService ;
 
 	private File upload;
 	private String uploadFileName;
 	private FileInfo fileInfo;
 
-	@Action("uploadFile")
 	public void uploadFile() {
 		try {
 			log.info("=========开始上传文件======================================");
-			this.bizs.getFileInfoBiz().uploadAndSaveFile(this.uploadFileName, this.upload, this.fileInfo);
+			fileInfoService.uploadAndSaveFile(this.uploadFileName, this.upload, this.fileInfo);
 			
 			String result = this.fileInfo.getId() + ":" + this.fileInfo.getName() + ":" + this.fileInfo.getPath();
 			  
@@ -48,10 +41,9 @@ public class FileAction extends BaseAction {
 		}
 	}
 	
-	@Action("delFile")
 	public void delFile() {
 		try {
-			this.bizs.getFileInfoBiz().delFile(fileInfo.getId());
+			fileInfoService.delFile(fileInfo.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getMessage(), e);

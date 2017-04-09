@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>  
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -43,12 +43,12 @@
 			<div class="checkout">
 				<div class="container">
 					<h3>我的购物车</h3>
-					<s:if test="#session.mycar == null || #session.mycar.items.isEmpty()">
+					<c:if test="${sessionScope.mycar == null || empty sessionScope.mycar.items}">
 						<div class="panel panel-default">
 						  <div class="label-pill">您的购物车为空，请先挑选喜欢的商品。</div>
 						</div
-					</s:if>
-					<s:else>
+					</c:if>
+					<c:if test="${not empty sessionScope.mycar and not empty sessionScope.mycar.items}">
 						<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
 							<table class="timetable_sub">
 								<thead>
@@ -60,15 +60,15 @@
 										<th>价格</th>
 									</tr>
 								</thead>
-								<s:iterator value="#session.mycar.items" id="productId">
-									<tr class="rem1" id="<s:property value="#productId.key"/>">
-										<input value="<s:property value="value.product.price"/>" type="hidden">
+								<c:forEach items="${sessionScope.mycar.items}" var="item">
+									<tr class="rem1" id="${item.key}"/>">
+										<input value="${item.value.product.price}" type="hidden">
 										<td class="invert-closeb">
 										<div class="rem">
 											<div class="close1"></div>
 										</div>
 										</td>
-										<td class="invert-image"><a href="toProductDetail.action?productId=<s:property value="#productId.key"/>" ><img src="<%=path %>/<s:property value="value.product.fileSrcs[0]"/>" data-src="holder.js/80px80p?text=走丢了Y.Y" alt="查看详情" class="img-responsive" /></a></td>
+										<td class="invert-image"><a href="toProductDetail.action?productId=${item.key }" ><img src="<%=path %>/${item.value.product.fileSrcs[0]}" data-src="holder.js/80px80p?text=走丢了Y.Y" alt="查看详情" class="img-responsive" /></a></td>
 										<td class="invert">
 										<div class="quantity">
 											<div class="quantity-select">
@@ -76,48 +76,48 @@
 													&nbsp;
 												</div>
 												<div class="entry value">
-													<s:property value="value.num"/>
+													${item.value.num}
 												</div>
-												<div class="entry value-plus active" data-number="<s:property value="value.product.number"/>">
+												<div class="entry value-plus active" data-number="${item.value.product.number}">
 													&nbsp;
 												</div>
 											</div>
 										</div></td>
-										<td class="invert"><s:property value="value.product.productName"/></td>
-										<td class="invert">￥<s:property value="value.product.price"/>*<s:property value="value.num"/>=<s:property value="value.price"/></td>
+										<td class="invert">${item.value.product.productName}</td>
+										<td class="invert">￥${item.value.product.price}*${item.value.num}=${item.value.price}</td>
 									</tr>
-								</s:iterator>
+								</c:forEach>
 							</table>
 						</div>
-					</s:else>
+					</c:if>
 					<div class="checkout-left">
 					
 
 						<div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
 							<a href="<%=path %>/toProductList" ><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>继续购物</a>
 						</div>
-						<s:if test="#session.mycar != null && !#session.mycar.items.isEmpty()">
+						<c:if test="${sessionScope.mycar != null && not empty sessionScope.mycar.items}">
 							<div class="checkout-left-basket animated wow slideInLeft" data-wow-delay=".5s">
 								<h4>购物清单</h4>
 								<ul>
-									<s:iterator value="#session.mycar.items" id="productId">
+									<c:forEach items="${sessionScope.mycar.items}" var="item">
 										<li>
-											<s:property value="value.product.productName"/> <i>-</i><span>￥<s:property value="value.price"/></span>
+											${item.value.product.productName} <i>-</i><span>￥${item.value.price}</span>
 										</li>
-									</s:iterator>
+									</c:forEach>
 								</ul>
 							</div>
-						</s:if>
+						</c:if>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
-			<s:if test="#session.mycar != null && !#session.mycar.items.isEmpty()">
+			<c:if test="${not empty sessionScope.mycarl and not empty sessionScope.mycar.items}">
 				<!-- //check out -->
 				<div align="center">
 					<a class="btn btn-success btn-default pull-left" data-toggle="modal" href="#myModal"><span class="glyphicon glyphicon-credit-card"></span>付款</a>
 				</div>
-			</s:if>
+			</c:if>
 			<!-- Modal -->
 			  <div class="modal fade" id="myModal" role="dialog">
 			    <div class="modal-dialog">

@@ -9,6 +9,7 @@ import com.zeral.bean.AccessToken;
 import com.zeral.dao.BaseDao;
 import com.zeral.dao.BasicConfigDao;
 import com.zeral.dao.UserDetailInfoDao;
+import com.zeral.exception.BaseException;
 import com.zeral.po.UserDetailInfo;
 import com.zeral.po.UserInfo;
 import com.zeral.service.ISchoolInfoService;
@@ -67,7 +68,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements 
 				configDao.setToken(accessToken);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new BaseException("获取微信用户信息失败");
 		}
 		return HttpsUtil.getUserInfo(accessToken.getToken(), openId);
 	}

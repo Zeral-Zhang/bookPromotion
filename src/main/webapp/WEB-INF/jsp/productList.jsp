@@ -42,37 +42,37 @@
 			<div class="container">
 				<ul class="nav_ul">
 					<div class="row">
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=1"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/1"> <img
 								src="<%=path%>/images/list/1.jpg" /> 电脑/配件
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=2"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/2"> <img
 								src="<%=path%>/images/list/2.jpg" /> 手机
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=3"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/3"> <img
 								src="<%=path%>/images/list/3.jpg" /> 相机/摄像机
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=4"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/4"> <img
 								src="<%=path%>/images/list/4.jpg" /> 女装
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=5"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/5"> <img
 								src="<%=path%>/images/list/5.jpg" /> 男装
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=6"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/6"> <img
 								src="<%=path%>/images/list/6.jpg" /> 化妆品
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=7"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/7"> <img
 								src="<%=path%>/images/list/7.jpg" /> 生活用品
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=8"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/8"> <img
 								src="<%=path%>/images/list/8.jpg" /> 书刊音像
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=9"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/9"> <img
 								src="<%=path%>/images/list/9.jpg" /> 交通工具
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=10"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/10"> <img
 								src="<%=path%>/images/list/10.jpg" /> 家用电器
 						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList?productTypeId=11"> <img
+						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/11"> <img
 								src="<%=path%>/images/list/11.jpg" /> 珠宝首饰
 						</a></li>
 					</div>
@@ -119,7 +119,7 @@
 					<c:forEach items="${pageBean.pagelist}" var="product">
 						<div class="col-md-3 col-xs-6">
 							<div class="card">
-								<a href="${pageContext.request.contextPath}/toProductDetail?productId=${product.productId}">
+								<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}">
 									<div class="card_img">
 										<img class="card-img-top center-block"
 											src="<%=path%>${product.fileSrcs[0]}"
@@ -136,7 +136,7 @@
 				</div>
 				<!-- 分页插件 -->
 				<div id="pagination">
-					<a href="toProductList.action?pageBean.page=${pageBean.page+1}&pageBean.totalCount=${pageBean.totalCount}&search=${search}" class="next">next</a>
+					<a href="<%=path %>/toProductList?page=${pageBean.page+1}&search=${search}" class="next">next</a>
 				</div>
 			</div>
 			<div class="clearfix"></div>
@@ -148,7 +148,6 @@
 	<script src="<%=path%>/bootstrap/js/bootstrap.js"></script>
 	<script src="<%=path%>/js/holder.js"></script>
 	<script src="<%=path%>/js/jquery-ias.min.js"></script>
-	<script src="<%=path%>/js/masonry.pkgd.min.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -160,7 +159,7 @@
 		$('.search_btn').click(function() {
 			var search = $(this).closest('.input-group').children("input").val();
 			if(search.length != 0) {
-				window.location.href = '${pageContext.request.contextPath}/toProductList.action?search='+search;
+				window.location.href = '${pageContext.request.contextPath}/toProductList?search='+search;
 				var pageA = $('#pagination > a');
 				pageA.attr("href", pageA.href+"?search="+search);
 			} else {

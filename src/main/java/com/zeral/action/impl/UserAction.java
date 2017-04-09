@@ -1,38 +1,38 @@
 package com.zeral.action.impl;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bean.PageBean;
-import com.bean.WeixinOauth2Token;
-import com.constant.WenlibackyardConstant;
-import com.po.OrderMain;
-import com.po.ProductInfo;
-import com.po.SchoolInfo;
-import com.po.UserDetailInfo;
-import com.po.UserInfo;
-import com.service.biz.BizService;
-import com.util.HttpsUtil;
-import com.util.PropertiesConfigUtil;
 import com.zeral.action.IUserAction;
+import com.zeral.bean.PageBean;
+import com.zeral.bean.WeixinOauth2Token;
+import com.zeral.constant.WenlibackyardConstant;
+import com.zeral.po.OrderMain;
+import com.zeral.po.ProductInfo;
+import com.zeral.po.SchoolInfo;
+import com.zeral.po.UserDetailInfo;
+import com.zeral.po.UserInfo;
+import com.zeral.service.IOrderMainService;
+import com.zeral.service.IProductInfoService;
+import com.zeral.service.ISchoolInfoService;
+import com.zeral.service.IUserService;
+import com.zeral.util.HttpsUtil;
+import com.zeral.util.PropertiesConfigUtil;
 
 /**
  * @author Zeral_Zhang
  * 
  */
 @Controller
-@Namespace("/")
 public class UserAction extends BaseAction implements IUserAction {
 
 	private static final long serialVersionUID = 1L;
@@ -51,18 +51,19 @@ public class UserAction extends BaseAction implements IUserAction {
 	 */
 	private List<SchoolInfo> departmentlst;
 
-	@Resource(name = "BizService")
-	private BizService biz;
+	@Autowired
+	private IUserService userService;
+	@Autowired
+	private ISchoolInfoService schoolInfoService;
+	@Autowired
+	private IProductInfoService productInfoService;
+	@Autowired
+	private IOrderMainService orderMainService;
 	
-	
-	@Action(value = "validateUser", results = {
-			@Result(name = "success", location = "${path}", type = "redirectAction"),
-			@Result(name = "error", location = "/WEB-INF/error.jsp") 
-	})
 	@Override
-	public String validateUser() {
+	@RequestMapping(value="/validateUser/{path}", method = RequestMethod.GET)
+	public String validateUser(HttpServletRequest request, @PathVariable String path) {
 		Properties prop = PropertiesConfigUtil.getProperties("account.properties");
-		HttpServletRequest request = ServletActionContext.getRequest();
 		// 用户同意授权后，能获取到code
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");
@@ -88,22 +89,18 @@ public class UserAction extends BaseAction implements IUserAction {
 	}
 
 	@Override
-	@Action(value = "userLogin", results = { @Result(name = "success", location = "/WEB-INF/userLogin.jsp") })
 	public String initLogin() {
 		return "success";
 	}
 
-	@Action(value = "toUserDetail", results = {
-			@Result(name = "success", location = "/WEB-INF/new_front/userDetail.jsp"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
 	@Override
 	public String toUserDetail() {
 		try {
 			UserInfo user = getLoginUser();
-			user.setUserDetailInfo(biz.getUserbiz().findUserDetail(getLoginUser().getUserId()));
-			schoolInfolst = biz.getSchoolInfoBiz().findColleges();
+			user.setUserDetailInfo(userService.findUserDetail(getLoginUser().getUserId()));
+			schoolInfolst = schoolInfoService.findColleges();
 			if (null != user.getUserDetailInfo() && null != user.getUserDetailInfo().getSchoolInfo()) {
-				departmentlst = biz.getSchoolInfoBiz().findByCollegeId(user.getUserDetailInfo().getSchoolInfo().getPCode());
+				departmentlst = schoolInfoService.findByCollegeId(user.getUserDetailInfo().getSchoolInfo().getPCode());
 			}
 			setLoginUser(user);
 		} catch (Exception e) {
@@ -113,34 +110,22 @@ public class UserAction extends BaseAction implements IUserAction {
 		return "success";
 	}
 
-	@Action(value = "toUserInfo", results = { 
-			@Result(name = "success", location = "/WEB-INF/new_front/userInfo.jsp") 
-			})
 	@Override
 	public String toUserInfo() {
-		try {
-			if (null == super.getLoginUser()) {
-				getResponse().sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserInfo"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "failed";
+		if (null == super.getLoginUser()) {
+			return "redirect:"+HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserInfo");
 		}
 		return "success";
 	}
 
-	@Action(value = "toUserSaling", results = { 
-			@Result(name = "success", location = "/WEB-INF/new_front/userSaling.jsp") 
-			})
 	@Override
 	public String toUserSaling() {
 		try {
 			if (null == super.getLoginUser()) {
-				getResponse().sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserSaling"));
-				return null;
+				return "redirect:"+HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserSaling");
 			}
 			pageBean = pageBean == null ? new PageBean() : pageBean;
-			List<ProductInfo> lsemp = biz.getProductInfobiz().findByUserId(pageBean, getLoginUser().getUserId());
+			List<ProductInfo> lsemp = productInfoService.findByUserId(pageBean, getLoginUser().getUserId());
 			pageBean.setPagelist(lsemp);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,18 +134,14 @@ public class UserAction extends BaseAction implements IUserAction {
 		return "success";
 	}
 	
-	@Action(value = "toUserPayed", results = { 
-			@Result(name = "success", location = "/WEB-INF/new_front/userPayed.jsp") 
-			})
 	@Override
 	public String toUserPayed() {
 		try {
 			if (null == super.getLoginUser()) {
-				getResponse().sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserSaling"));
-				return null;
+				return "redirect:"+HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserPayed");
 			}
 			pageBean = pageBean == null ? new PageBean() : pageBean;
-			List<OrderMain> lsemp = biz.getProductInfobiz().findOrderMain(pageBean, getLoginUser().getUserId());
+			List<OrderMain> lsemp = orderMainService.findOrderMain(pageBean, getLoginUser().getUserId());
 			pageBean.setPagelist(lsemp);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,14 +150,12 @@ public class UserAction extends BaseAction implements IUserAction {
 		return "success";
 	}
 	
-	@Action(value = "updateUser", results = { @Result(name="success", location="toUserDetail",type="redirectAction"),
-			@Result(name = "failed", location = "/WEB-INF/error.jsp") })
 	@Override
 	public String update() {
 		try {
 			userDetail.setUserInfo(getLoginUser().getUserId());
 			// 将修改后的用户信息保存到session域中
-			getLoginUser().setUserDetailInfo(biz.getUserbiz().update(userDetail));
+			getLoginUser().setUserDetailInfo(userService.updateUser(userDetail));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
