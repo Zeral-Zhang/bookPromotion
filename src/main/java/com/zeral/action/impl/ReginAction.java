@@ -2,9 +2,13 @@ package com.zeral.action.impl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zeral.action.IRegionAction;
 import com.zeral.exception.BaseException;
@@ -18,17 +22,19 @@ public class ReginAction implements IRegionAction {
 	private IRegionService regionService;
 
 	@Override
-	public void initProvince() {
+	@RequestMapping(value="/initProvince", method = RequestMethod.GET)
+	public void initProvince(HttpServletResponse response) {
 		try {
 			List<Regions> provincelst = regionService.findProvince();
-			WebUtil.sendJSONArrayResponse(provincelst);
+			WebUtil.sendJSONArrayResponse(provincelst, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void loadCitys() {
+	@RequestMapping(value="/loadCitys", method = RequestMethod.GET)
+	public void loadCitys(HttpServletResponse response) {
 		try {
 			String fcode = ServletActionContext.getRequest().getParameter("code");
 			if (!"".equals(fcode)) {
@@ -39,7 +45,7 @@ public class ReginAction implements IRegionAction {
 					fcodeInt = 1;
 				}
 				List<Regions> citylst = regionService.findCitys(fcodeInt);
-				WebUtil.sendJSONArrayResponse(citylst);
+				WebUtil.sendJSONArrayResponse(citylst, response);
 			}
 		} catch (Exception e) {
 			throw new BaseException("加载城市信息失败");

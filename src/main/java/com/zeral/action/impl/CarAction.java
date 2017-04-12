@@ -2,10 +2,12 @@ package com.zeral.action.impl;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,8 +24,8 @@ public class CarAction implements ICarAction {
 	@Autowired
 	private IProductInfoService productInfoService;
 	
-	@RequestMapping(value = "/addToCar", method = RequestMethod.GET)
-	public String add(String productId, Integer num) {
+	@RequestMapping(value = "/addToCar/{productId}", method = RequestMethod.GET)
+	public String add(@PathVariable String productId, Integer num) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");
@@ -38,7 +40,7 @@ public class CarAction implements ICarAction {
 				car.sumPrice();
 				session.setAttribute("mycar", car);
 			}
-			return "redirect:shopCar";
+			return "shopCar";
 		} catch (Exception e) {
 			return "error";
 		}
@@ -50,14 +52,14 @@ public class CarAction implements ICarAction {
 		return "shopCar";
 	}
 
-	@RequestMapping(value = "removeFromCar")
+	@RequestMapping(value = "/removeFromCar/{productId}")
 	@Override
-	public void removeFromCar(String productId) {
+	public void removeFromCar(@PathVariable String productId, HttpServletResponse response) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");
 			if (car == null) {
-				WebUtil.sendInfoMsg("购物车为空");
+				WebUtil.sendInfoMsg("购物车为空", response);
 				return;
 			}
 			if (productId != null) {
@@ -67,13 +69,13 @@ public class CarAction implements ICarAction {
 				session.setAttribute("mycar", car);
 			}
 		} catch (Exception e) {
-			WebUtil.sendErrorMsg("删除商品出错");
+			WebUtil.sendErrorMsg("删除商品出错", response);
 		}
 	}
 
-	@RequestMapping(value = "changeQuantity", method = RequestMethod.GET)
+	@RequestMapping(value = "/changeQuantity/{productId}", method = RequestMethod.GET)
 	@Override
-	public String changeQuantity(String productId, Integer num) {
+	public String changeQuantity(@PathVariable String productId, Integer num) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar car = (MyCar) session.getAttribute("mycar");

@@ -5,14 +5,15 @@ import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts2.ServletActionContext;
+import com.zeral.constant.BookPromotionConstant;
+
 
 public class FileUtil
 {
   public static File getDestFile(String fileInfoName)
   {
-    HttpServletRequest request = ServletActionContext.getRequest();
-    String dest = request.getServletContext().getRealPath("/") + getRelativeFilePath(fileInfoName);
+    HttpServletRequest request = WebUtil.getRequest();
+    String dest = request.getServletContext().getRealPath("/") + BookPromotionConstant.UPLOAD_URL + getRelativeFilePath(fileInfoName);
     
     return new File(dest);
   }

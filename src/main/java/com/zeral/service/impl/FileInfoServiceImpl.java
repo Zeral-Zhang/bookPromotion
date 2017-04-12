@@ -9,7 +9,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.dao.BaseDao;
 import com.zeral.dao.FileInfoDao;
 import com.zeral.po.FileInfo;
@@ -45,10 +47,10 @@ public class FileInfoServiceImpl extends BaseServiceImpl<FileInfo> implements IF
 		}
 	}
 
-	public File uploadFile(File source, String fileInfoName) {
+	public File uploadFile(MultipartFile source, String fileInfoName) {
 		try {
 			File destFile = FileUtil.getDestFile(fileInfoName);
-			FileUtils.copyFile(source, destFile);
+			FileUtils.copyInputStreamToFile(source.getInputStream(), destFile);
 			return destFile;
 		} catch (IOException e) {
 			log.error("上传文件失败", e);
@@ -56,7 +58,7 @@ public class FileInfoServiceImpl extends BaseServiceImpl<FileInfo> implements IF
 		}
 	}
 
-	public File uploadAndSaveFile(String uploadFileName, File source, FileInfo fileInfo, boolean isVideo) {
+	public File uploadAndSaveFile(String uploadFileName, MultipartFile source, FileInfo fileInfo, boolean isVideo) {
 		String id = UUID.randomUUID().toString();
 		fileInfo.setId(id);
 		String suffix = FileUtil.getFileSuffix(uploadFileName);
@@ -66,15 +68,15 @@ public class FileInfoServiceImpl extends BaseServiceImpl<FileInfo> implements IF
 		}
 		String relativeFilePath = FileUtil.getRelativeFilePath(id + suffix);
 		fileInfo.setName(uploadFileName);
-		fileInfo.setPath("/" + relativeFilePath);
+		fileInfo.setPath(BookPromotionConstant.UPLOAD_URL + relativeFilePath);
 		fileInfo.setStatus(Integer.valueOf(0));
-		fileInfo.setFileSize(Double.valueOf(source.length() / 1024L));
+		fileInfo.setFileSize(Double.valueOf(source.getSize() / 1024L));
 		fileInfo.setOriginalFormat(FileUtil.rtnFileType(uploadFileName));
 		save(fileInfo);
 		return destFile;
 	}
 
-	public File uploadAndSaveFile(String uploadFileName, File source, FileInfo fileInfo) {
+	public File uploadAndSaveFile(String uploadFileName, MultipartFile source, FileInfo fileInfo) {
 		return uploadAndSaveFile(uploadFileName, source, fileInfo, false);
 	}
 

@@ -1,7 +1,5 @@
 package com.zeral.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
@@ -13,16 +11,15 @@ public interface IProductAction {
 	/**
 	 * 添加商品，添加成功返回商品列表界面
 	 * @param productInfo 表单的商品信息
-	 * @param fileSrcs 图片附件的上传地址信息
 	 * @return
 	 */
-	public String addProduct(ProductInfo productInfo, List<String> fileSrcs);
+	public String addProduct(ProductInfo productInfo);
 	
 	/**
 	 * 初始化商品类别信息
 	 * 
 	 */
-	public void initProductType();
+	public void initProductType(HttpServletResponse response);
 	
 	/**
 	 * 加载商品列表信息

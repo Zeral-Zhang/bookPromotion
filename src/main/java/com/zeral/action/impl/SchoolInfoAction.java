@@ -2,6 +2,8 @@ package com.zeral.action.impl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,11 +34,11 @@ public class SchoolInfoAction implements ISchoolInfoAction {
 	private IProductInfoService productInfoService;
 	
 	@Override
-	@RequestMapping(value="/loadDepartments", method = RequestMethod.GET)
-	public void loadDepartments(String code) {
+	@RequestMapping(value="/loadDepartments/{code}", method = RequestMethod.GET)
+	public void loadDepartments(@PathVariable String code, HttpServletResponse response) {
 		try {
 			List<SchoolInfo> schoolInfolst = schoolInfoService.findByCollegeId(code);
-			WebUtil.sendJSONArrayResponse(schoolInfolst);
+			WebUtil.sendJSONArrayResponse(schoolInfolst, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

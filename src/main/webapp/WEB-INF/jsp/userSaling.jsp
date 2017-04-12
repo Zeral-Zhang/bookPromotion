@@ -38,7 +38,7 @@
             <div class="weui-panel__hd">我发布的商品列表</div>
             <div class="weui-panel__bd">
             	<c:forEach items="${pageBean.pagelist}" var="product">
-            		<a href="${pageContext.request.contextPath}/toProductDetail?productId=${product.productId}" class="weui-media-box weui-media-box_appmsg">
+            		<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}" class="weui-media-box weui-media-box_appmsg">
 	                    <div class="weui-media-box__hd">
 	                        <img class="weui-media-box__thumb" src="${product.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
 	                    </div>
@@ -54,7 +54,7 @@
             	</c:forEach>
             </div>
             <div id="pagination">
-				<a href="toUserSaling.action?pageBean.page=${pageBean.page+1}&pageBean.totalCount=${pageBean.totalCount}" class="next">next</a>
+				<a href="<%=path %>/toUserSaling?page=${pageBean.page+1}&totalCount=${pageBean.totalCount}" class="next">next</a>
 			</div>
         </div>
 	</div>

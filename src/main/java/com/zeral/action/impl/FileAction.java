@@ -1,9 +1,11 @@
 package com.zeral.action.impl;
 
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zeral.po.FileInfo;
 import com.zeral.service.IFileInfoService;
@@ -22,26 +24,23 @@ public class FileAction extends BaseAction {
 	@Autowired
 	private IFileInfoService fileInfoService ;
 
-	private File upload;
-	private String uploadFileName;
-	private FileInfo fileInfo;
-
-	public void uploadFile() {
+	@RequestMapping(value = "/uploadFile")
+	public void uploadFile(String uploadFileName, FileInfo fileInfo, MultipartFile upload, HttpServletResponse response) {
 		try {
-			log.info("=========开始上传文件======================================");
-			fileInfoService.uploadAndSaveFile(this.uploadFileName, this.upload, this.fileInfo);
+			System.out.println("=========开始上传文件======================================");
+			fileInfoService.uploadAndSaveFile(uploadFileName, upload, fileInfo);
 			
-			String result = this.fileInfo.getId() + ":" + this.fileInfo.getName() + ":" + this.fileInfo.getPath();
+			String result = fileInfo.getId() + ":" + fileInfo.getName() + ":" + fileInfo.getPath();
 			  
-			WebUtil.sendResponse(result);
-			log.info("==========文件上传完毕======================================");
+			WebUtil.sendResponse(result, response);
+			System.out.println("==========文件上传完毕======================================");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getMessage(), e);
 		}
 	}
 	
-	public void delFile() {
+	public void delFile(FileInfo fileInfo) {
 		try {
 			fileInfoService.delFile(fileInfo.getId());
 		} catch (Exception e) {
@@ -49,29 +48,4 @@ public class FileAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 	}
-
-	public File getUpload() {
-		return upload;
-	}
-
-	public void setUpload(File upload) {
-		this.upload = upload;
-	}
-
-	public String getUploadFileName() {
-		return uploadFileName;
-	}
-
-	public void setUploadFileName(String uploadFileName) {
-		this.uploadFileName = uploadFileName;
-	}
-
-	public FileInfo getFileInfo() {
-		return fileInfo;
-	}
-
-	public void setFileInfo(FileInfo fileInfo) {
-		this.fileInfo = fileInfo;
-	}
-
 }

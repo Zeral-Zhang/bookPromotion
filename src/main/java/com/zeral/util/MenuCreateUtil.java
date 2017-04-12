@@ -9,7 +9,7 @@ import com.zeral.bean.Button;
 import com.zeral.bean.CommenButton;
 import com.zeral.bean.ComplexButton;
 import com.zeral.bean.Menu;
-import com.zeral.constant.WenlibackyardConstant;
+import com.zeral.constant.BookPromotionConstant;
 
 /**
  * @author Zeral_Zhang
@@ -46,37 +46,37 @@ public class MenuCreateUtil {
 		btn11.setName("旧物出售");
 		btn11.setType("click");
 		btn11.setType("view");
-		btn11.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/toProductAdd");
+		btn11.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toProductAdd");
 
 		CommenButton btn12 = new CommenButton();
 		btn12.setName("学院查询");
 		btn12.setType("click");
 		btn12.setType("view");
-		btn12.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/toDiscovery");
+		btn12.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toDiscovery");
 
 		CommenButton btn13 = new CommenButton();
 		btn13.setName("进入后院");
 		btn13.setType("click");
 		btn13.setType("view");
-		btn13.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/toProductList");
+		btn13.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toProductList");
 
 		CommenButton btn21 = new CommenButton();
 		btn21.setName("我的订单");
 		btn21.setType("click");
 		btn21.setType("view");
-		btn21.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/toUserPayed");
+		btn21.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toUserPayed");
 
 		CommenButton btn22 = new CommenButton();
 		btn22.setName("我的旧物");
 		btn22.setType("click");
 		btn22.setType("view");
-		btn22.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/toUserSaling");
+		btn22.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toUserSaling");
 		
 		CommenButton btn23 = new CommenButton();
 		btn23.setName("我的购物车");
 		btn23.setType("click");
 		btn23.setType("view");
-		btn23.setUrl(WenlibackyardConstant.SERVER_URL+"wenlibackyard/shopCar");
+		btn23.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/shopCar");
 
 		CommenButton btn31 = new CommenButton();
 		btn31.setName("团队介绍");

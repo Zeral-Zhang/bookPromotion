@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zeral.action.IProductAction;
 import com.zeral.bean.PageBean;
-import com.zeral.constant.WenlibackyardConstant;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.po.ProductInfo;
 import com.zeral.po.ProductType;
 import com.zeral.service.IProductInfoService;
@@ -44,7 +44,7 @@ public class ProductAction extends BaseAction implements IProductAction {
 	public String toProductAdd(HttpServletResponse response) {
 		try {
 			if (null == super.getLoginUser()) {
-				response.sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "toUserInfo"));
+				response.sendRedirect(HttpsUtil.AuthLogin(BookPromotionConstant.VALIDATE_URL, "toProductAdd"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,13 +55,12 @@ public class ProductAction extends BaseAction implements IProductAction {
 
 	@Override
 	@RequestMapping(value="/productAdd", method = RequestMethod.POST)
-	public String addProduct(ProductInfo productInfo, List<String> fileSrcs) {
+	public String addProduct(ProductInfo productInfo) {
 		try {
 			// 添加商品发布日期
 			productInfo.setPbDate(new Date());
 			// 给商品添加用户信息
 			productInfo.setUserInfoId(getLoginUser().getUserId());
-			productInfo.setFileSrcs(fileSrcs);
 			productInfoService.save(productInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,10 +71,10 @@ public class ProductAction extends BaseAction implements IProductAction {
 
 	@Override
 	@RequestMapping(value = "/initProductType", method = RequestMethod.GET)
-	public void initProductType() {
+	public void initProductType(HttpServletResponse response) {
 		try {
 			List<ProductType> productTypelst = productTypeService.findAll();
-			WebUtil.sendJSONArrayResponse(productTypelst, new String[] { "productInfos" });
+			WebUtil.sendJSONArrayResponse(productTypelst, new String[] { "productInfos" }, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

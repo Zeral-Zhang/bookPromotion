@@ -40,7 +40,7 @@
 	            <div class="weui-panel__bd">
 	                <div class="weui-media-box weui-media-box_text">
 	                	<c:forEach items="${orderMain.orderDetails }" var="orderDetail">
-	                		 <a href="${pageContext.request.contextPath}/toProductDetail?productId=${orderDetail.productInfo.productId}" class="weui-media-box weui-media-box_appmsg">
+	                		 <a href="${pageContext.request.contextPath}/toProductDetail/${orderDetail.productInfo.productId}" class="weui-media-box weui-media-box_appmsg">
 			                    <div class="weui-media-box__hd">
 			                        <img class="weui-media-box__thumb" src="${orderDetail.productInfo.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
 			                    </div>
@@ -64,7 +64,7 @@
 	        </div>
     	</c:forEach>
     	 <div id="pagination">
-			<a href="toUserPayed.action?pageBean.page=${pageBean.page+1}&pageBean.totalCount=${pageBean.totalCount}" class="next">next</a>
+			<a href="<%=path %>/toUserPayed?page=${pageBean.page+1}&totalCount=${pageBean.totalCount}" class="next">next</a>
 		</div>
     </div>
 </div>

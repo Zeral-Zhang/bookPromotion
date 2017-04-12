@@ -46,7 +46,7 @@
 					<c:if test="${sessionScope.mycar == null || empty sessionScope.mycar.items}">
 						<div class="panel panel-default">
 						  <div class="label-pill">您的购物车为空，请先挑选喜欢的商品。</div>
-						</div
+						</div>
 					</c:if>
 					<c:if test="${not empty sessionScope.mycar and not empty sessionScope.mycar.items}">
 						<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
@@ -61,8 +61,8 @@
 									</tr>
 								</thead>
 								<c:forEach items="${sessionScope.mycar.items}" var="item">
-									<tr class="rem1" id="${item.key}"/>">
-										<input value="${item.value.product.price}" type="hidden">
+									<tr class="rem1" id="${item.key}">
+										<input value="${item.value.product.price}" type="hidden" />
 										<td class="invert-closeb">
 										<div class="rem">
 											<div class="close1"></div>
@@ -112,7 +112,7 @@
 					</div>
 				</div>
 			</div>
-			<c:if test="${not empty sessionScope.mycarl and not empty sessionScope.mycar.items}">
+			<c:if test="${not empty sessionScope.mycar and not empty sessionScope.mycar.items}">
 				<!-- //check out -->
 				<div align="center">
 					<a class="btn btn-success btn-default pull-left" data-toggle="modal" href="#myModal"><span class="glyphicon glyphicon-credit-card"></span>付款</a>
@@ -131,7 +131,7 @@
 			          <p>合计：￥${sessionScope.mycar.sumPrice}</p>
 			        </div>
 			        <div class="modal-footer">
-			          <a href="addOrder.action" id="" class="btn btn-success btn-default">确认</a>
+			          <a href="<%=path %>/addOrder" id="" class="btn btn-success btn-default">确认</a>
 			          <a href="javascript:;" class="btn btn-danger btn-default" data-dismiss="modal">取消</a>
 			        </div>
 			      </div>
@@ -156,8 +156,7 @@
 				var productId = $(this).closest(".rem1").attr("id");
 				$.ajax({
 					   type: "get",
-					   url: "${pageContext.request.contextPath}/removeFromCar.action",
-					   data: "productId="+ productId,
+					   url: "${pageContext.request.contextPath}/removeFromCar/"+productId,
 					   success: function(msg){
 						   $('#'+productId).fadeOut('slow', function() {
 								 $('#'+productId).remove();
@@ -173,7 +172,7 @@
 					alertify.error('商品数量超过库存！');
 					return;
 				}
-				window.location.href = "${pageContext.request.contextPath}/changeQuantity?productId=" + productId +"&num=1";
+				window.location.href = "${pageContext.request.contextPath}/changeQuantity/" + productId +"?num=1";
 				/* $.ajax({
 					   type: "get",
 					   url: "${pageContext.request.contextPath}/changeQuantity.action",
@@ -188,7 +187,7 @@
 				var productId = $(this).closest(".rem1").attr("id");
 				var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
 				if (newVal >= 1)
-					window.location.href = "${pageContext.request.contextPath}/changeQuantity?productId=" + productId +"&num=-1";
+					window.location.href = "${pageContext.request.contextPath}/changeQuantity/" + productId +"?num=-1";
 					/* $.ajax({
 						   type: "get",
 						   url: "${pageContext.request.contextPath}/changeQuantity.action",

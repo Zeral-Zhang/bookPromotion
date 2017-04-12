@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.zeral.bean.PageBean;
+import com.zeral.exception.BaseException;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -35,8 +37,7 @@ public class WebUtil {
 	 *            错误信息
 	 * @author Zeral
 	 */
-	public static void sendErrorMsg(final String errorMsg) {
-		final HttpServletResponse response = ServletActionContext.getResponse();
+	public static void sendErrorMsg(final String errorMsg, final HttpServletResponse response) {
 		final Message message = new Message(errorMsg, Message.FAIL);
 		response.setStatus(SERVER_ERROR);
 		final JSONObject jsonMessage = JSONObject.fromObject(message);
@@ -53,19 +54,18 @@ public class WebUtil {
 	 * @param type
 	 *            信息类型
 	 */
-	public static void sendMessage(final String msg, final String type) {
-		final HttpServletResponse response = ServletActionContext.getResponse();
+	public static void sendMessage(final String msg, final String type, final HttpServletResponse response) {
 		final Message message = new Message(msg, type);
 		final JSONObject jsonMessage = JSONObject.fromObject(message);
 		write(jsonMessage.toString(), response);
 	}
 
-	public static void sendInfoMsg(final String msg) {
-		sendMessage(msg, Message.INFO);
+	public static void sendInfoMsg(final String msg, final HttpServletResponse response) {
+		sendMessage(msg, Message.INFO, response);
 	}
 
-	public static void sendSuccessMsg(final String msg) {
-		sendMessage(msg, Message.SUCCESS);
+	public static void sendSuccessMsg(final String msg, final HttpServletResponse response) {
+		sendMessage(msg, Message.SUCCESS, response);
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class WebUtil {
 	 * 
 	 * @author Zeral
 	 */
-	public static void sendJSONObjectResponse(final Object object) {
-		sendJSONObjectResponse(object, null);
+	public static void sendJSONObjectResponse(final Object object, final HttpServletResponse response) {
+		sendJSONObjectResponse(object, null, response);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class WebUtil {
 	 *            除对象部分属性
 	 * @author Zeral
 	 */
-	public static void sendJSONObjectResponse(final Object object, final String[] excludes) {
+	public static void sendJSONObjectResponse(final Object object, final String[] excludes, final HttpServletResponse response) {
 		final JsonConfig jsonConfig = new JsonConfig();
 		if (excludes != null) {
 			jsonConfig.setExcludes(excludes);
@@ -92,7 +92,7 @@ public class WebUtil {
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
 		final JSONObject jsonObject = JSONObject.fromObject(object, jsonConfig);
-		sendResponse(jsonObject.toString());
+		sendResponse(jsonObject.toString(), response);
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class WebUtil {
 	 * 
 	 * @author Zeral
 	 */
-	public static void sendJSONArrayResponse(final Object array) {
-		sendJSONArrayResponse(array, new String[] {});
+	public static void sendJSONArrayResponse(final Object array, final HttpServletResponse response) {
+		sendJSONArrayResponse(array, new String[] {}, response);
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class WebUtil {
 	 *            除对象部分属性
 	 * @author Zeral
 	 */
-	public static void sendJSONArrayResponse(final Object array, final String[] excludes) {
-		sendJSONArrayResponse(array, excludes, null);
+	public static void sendJSONArrayResponse(final Object array, final String[] excludes, final HttpServletResponse response) {
+		sendJSONArrayResponse(array, excludes, null, response);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class WebUtil {
 	 * 
 	 * @author Zeral
 	 */
-	public static void sendJSONArrayResponse(final Object array, final String[] excludes, final PageBean pageInfo) {
+	public static void sendJSONArrayResponse(final Object array, final String[] excludes, final PageBean pageInfo, final HttpServletResponse response) {
 		final JsonConfig config = new JsonConfig();
 		config.setExcludes(excludes);
 		config.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
@@ -131,9 +131,9 @@ public class WebUtil {
 			final JSONObject jsonObject = new JSONObject();
 			jsonObject.put("total", pageInfo.getTotalCount());
 			jsonObject.put("rows", jsonArray);
-			sendResponse(jsonObject.toString());
+			sendResponse(jsonObject.toString(), response);
 		} else {
-			sendResponse(jsonArray.toString());
+			sendResponse(jsonArray.toString(), response);
 		}
 	}
 
@@ -142,8 +142,7 @@ public class WebUtil {
 	 * 
 	 * @author Zeral
 	 */
-	public static void sendResponse(final String text) {
-		HttpServletResponse response = ServletActionContext.getResponse();
+	public static void sendResponse(final String text, final HttpServletResponse response) {
 		write(text, response);
 	}
 
@@ -168,16 +167,19 @@ public class WebUtil {
 		}
 	}
 
-	public static HttpServletResponse getResponse() {
-		return ServletActionContext.getResponse();
+	public static HttpSession getSession() {
+		HttpSession session = null;
+		try {
+			session = getRequest().getSession();
+		} catch (Exception e) {
+			throw new BaseException("获取session失败");
+		}
+		return session;
 	}
 
 	public static HttpServletRequest getRequest() {
-		return ServletActionContext.getRequest();
-	}
-	
-	public static HttpSession getSession() {
-		return getRequest().getSession();
+		ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		return attrs.getRequest();
 	}
 
 	public static int getParameter(String paramName, int defaultValue) {

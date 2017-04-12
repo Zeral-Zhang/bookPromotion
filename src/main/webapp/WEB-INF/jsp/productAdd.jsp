@@ -36,14 +36,14 @@
 		</nav>
 	</div>
 	<div class="container">
-		<form id="productForm" action="<%=path%>/addProduct.action" method="post">
+		<form id="productForm" action="<%=path%>/productAdd" method="post">
 			<div class="weui-cells weui-cells_form">
 				<div class="weui-cell">
 					<div class="weui-cell__hd">
 						<label class="weui-label">商品名称</label>
 					</div>
 					<div class="weui-cell__bd">
-						<input class="weui-input" placeholder="请输入商品名称" name="productInfo.productName" type="text"/>
+						<input class="weui-input" placeholder="请输入商品名称" name="productName" type="text"/>
 					</div>
 				</div>
 				<div class="weui-cell">
@@ -51,13 +51,13 @@
 						<label class="weui-label">品牌</label>
 					</div>
 					<div class="weui-cell__bd">
-						<input class="weui-input" placeholder="请输入商品品牌" name="productInfo.brand" type="text" />
+						<input class="weui-input" placeholder="请输入商品品牌" name="brand" type="text" />
 					</div>
 				</div>
 				<div class="weui-cell">
 	                <div class="weui-cell__hd"><label class="weui-label">商品数量</label></div>
 	                <div class="weui-cell__bd">
-	                    <input class="weui-input" type="number" name="productInfo.number" pattern="[0-9]*" placeholder="商品数量"/>
+	                    <input class="weui-input" type="number" name="number" pattern="[0-9]*" placeholder="商品数量"/>
 	                </div>
            	 	</div>
 				<div class="weui-cell">
@@ -66,7 +66,7 @@
 	                </div>
 	                <div class="weui-cell__bd">
 	                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-							<input id="buydate" name="productInfo.buyDate" class="form-control" size="16" type="text" value="" readonly> 
+							<input id="buydate" name="buyDate" class="form-control" size="16" type="text" value="" readonly> 
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-remove"></span>
 								</span> 
@@ -79,14 +79,14 @@
 				<div class="weui-cell">
 	                <div class="weui-cell__hd"><label class="weui-label">商品价格</label></div>
 	                <div class="weui-cell__bd">
-	                    <input class="weui-input" type="number" name="productInfo.price" pattern="[0-9]*" placeholder="商品价格"/>
+	                    <input class="weui-input" type="number" name="price" pattern="[0-9]*" placeholder="商品价格"/>
 	                </div>
            	 	</div>
            	 	<div class="weui-cells__title">商品类别</div>
 				<div class="weui-cells">
 					<div class="weui-cell weui-cell_select weui-cell_select-before">
 						<div class="weui-cell__hd">
-							<select style="width: 300px;" class="weui-select" name="productInfo.productType.productTypeId">
+							<select style="width: 300px;" class="weui-select" name="productType.productTypeId">
 								<optgroup label="请选择：" id="productType">
 								</optgroup>
 							</select>
@@ -97,7 +97,7 @@
 				<div class="weui-cells">
 					<div class="weui-cell weui-cell_select weui-cell_select-before">
 						<div class="weui-cell__hd">
-							<select style="width: 300px;" class="weui-select" name="productInfo.state">
+							<select style="width: 300px;" class="weui-select" name="state">
 								<optgroup label="请选择：">
 									<option value="0">不可用</option>
 									<option value="1">未上架</option>
@@ -156,7 +156,7 @@
 	<script>
       $(function () {
       // 初始化商品类别信息
-		$.get("init_ProductType.action", function(data) {
+		$.get("initProductType", function(data) {
 			$.each(data, function(i, item) {
 					$("#productType").append(
 							"<option value='" + item.productTypeId + "'>"
@@ -253,7 +253,7 @@
 			                  success: function(result){
 			                	  if(result) {
 			                		 var fileInfo = result.split(':');
-			                		 $uploaderFiles.append($(tmpl.replace('#url#', '<%=path%>'+fileInfo[2]).replace('#name#', 'fileSrcs['+fileCounter+']').replace('#value#', fileInfo[2]).replace('#id#', fileInfo[0])));
+			                		 $uploaderFiles.append($(tmpl.replace('#url#', '<%=path%>'+fileInfo[2]).replace('#name#', 'fileSrcs').replace('#value#', fileInfo[2]).replace('#id#', fileInfo[0])));
 			                		 fileCounter+=1;
 			                		 $('.weui-uploader__info').text(fileCounter+'/5');  
 			                	  }

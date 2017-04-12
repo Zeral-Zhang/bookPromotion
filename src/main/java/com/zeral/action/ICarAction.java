@@ -1,5 +1,7 @@
 package com.zeral.action;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface ICarAction {
 	/**
 	 * 加入购物车
@@ -16,7 +18,7 @@ public interface ICarAction {
 	/**
 	 * 从购物车中清除商品
 	 */
-	public void removeFromCar(String productId);
+	public void removeFromCar(String productId, HttpServletResponse response);
 	
 	/**
 	 * 增加或减少购物车商品数量

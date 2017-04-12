@@ -1,5 +1,7 @@
 package com.zeral.action;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.ui.Model;
 
 import com.zeral.bean.PageBean;
@@ -14,7 +16,7 @@ public interface ISchoolInfoAction {
 	 * 根源院code加载系数据
 	 * @param code 学院code
 	 */
-	public void loadDepartments(String code);
+	public void loadDepartments(String code, HttpServletResponse response);
 
 	/**
 	 *加载发现栏目 

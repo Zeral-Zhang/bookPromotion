@@ -154,9 +154,9 @@
 			});
 			<!--quantity-->
 			
-			$("#addCar").click(function() {
+			$("#addToCar").click(function() {
 				var num = $(".value").text();
-				window.location.href = "${pageContext.request.contextPath}/add_Car?productId=${productInfo.productId}&&num=" + num + "";
+				window.location.href = "${pageContext.request.contextPath}/addToCar/${productInfo.productId}?num=" + num + "";
 			});
 		</script>
 	</body>

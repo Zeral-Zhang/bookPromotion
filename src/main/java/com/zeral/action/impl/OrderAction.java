@@ -3,16 +3,20 @@ package com.zeral.action.impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zeral.action.IOrderAction;
 import com.zeral.bean.MyCar;
 import com.zeral.bean.PageBean;
 import com.zeral.bean.ShopCarItem;
-import com.zeral.constant.WenlibackyardConstant;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.po.OrderMain;
 import com.zeral.po.ProductInfo;
 import com.zeral.po.UserInfo;
@@ -28,18 +32,15 @@ public class OrderAction implements IOrderAction {
 	@Autowired
 	private IOrderMainService orderMainService;
 
-	private PageBean pageBean;
-	private List<OrderMain> mainlst;
-
 	@Override
-	public String addOrder() {
+	@RequestMapping(value = "/addOrder", method = RequestMethod.GET)
+	public String addOrder(HttpServletResponse response) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			MyCar myCar = (MyCar) session.getAttribute("mycar");
 			UserInfo user = (UserInfo) session.getAttribute("userInfo");
 			if (null == user) {
-				WebUtil.getResponse().sendRedirect(HttpsUtil.AuthLogin(WenlibackyardConstant.VALIDATE_URL, "addOrder"));
-				return null;
+				response.sendRedirect(HttpsUtil.AuthLogin(BookPromotionConstant.VALIDATE_URL, "addOrder"));
 			}
 			// 购买成功，商品数量减少
 			if (orderMainService.saveOrder(myCar, user)) {
@@ -54,18 +55,19 @@ public class OrderAction implements IOrderAction {
 						productInfoService.update(product);
 					}
 				}
-				return "success";
+				return "shopCar";
 			} else {
-				return "failed";
+				return "error";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
 	}
 
 	@Override
-	public String findAllMain() {
+	@RequestMapping(value = "/findAllMain", method = RequestMethod.GET)
+	public String findAllMain(PageBean pageBean, Model model) {
 		HttpSession session = WebUtil.getSession();
 		try {
 			UserInfo user = (UserInfo) session.getAttribute("userInfo");
@@ -73,28 +75,13 @@ public class OrderAction implements IOrderAction {
 			pageBean = new PageBean();
 			pageBean.setPage(1);
 			pageBean.setPageSize(8);
-			mainlst = orderMainService.findAllMain(userId, pageBean);
-			return "success";
+			List<OrderMain> mainlst = orderMainService.findAllMain(userId, pageBean);
+			model.addAttribute(mainlst);
+			return "userPayed";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			return "error";
 		}
 	}
 
-	public PageBean getPageBean() {
-		return pageBean;
-	}
-
-	public void setPageBean(PageBean pageBean) {
-		this.pageBean = pageBean;
-	}
-
-	public List<OrderMain> getMainlst() {
-		return mainlst;
-	}
-
-	public void setMainlst(List<OrderMain> mainlst) {
-		this.mainlst = mainlst;
-	}
-	
 }
