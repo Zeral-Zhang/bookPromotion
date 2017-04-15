@@ -2,6 +2,7 @@ package com.zeral.service;
 
 import java.util.List;
 
+import com.zeral.bean.AccessToken;
 import com.zeral.po.BasicConfig;
 
 /**
@@ -97,4 +98,16 @@ public interface IBasicConfigService {
 	 * @return 配置信息数据集合
 	 */
 	List<BasicConfig> findByCodeAll(String code);
+	
+	/** 
+	 * 获取有效的accessToken
+	 * @return
+	 */
+	AccessToken getValidAccessToken();
+	
+	/** 
+	 * 获取有效的JsapiTicket
+	 * @return
+	 */
+	AccessToken getValidJsapiTicket();
 }

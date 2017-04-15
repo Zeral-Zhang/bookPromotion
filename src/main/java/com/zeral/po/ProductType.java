@@ -31,6 +31,7 @@ public class ProductType implements java.io.Serializable {
 	private String productTypeName;
 	private Integer isDelete;
 	private String context;
+	private Integer order;
 	private Set<ProductInfo> productInfos = new HashSet<ProductInfo>(0);
 
 	// Constructors
@@ -101,9 +102,18 @@ public class ProductType implements java.io.Serializable {
 	public String getContext() {
 		return this.context;
 	}
-
+	
 	public void setContext(String context) {
 		this.context = context;
+	}
+	
+	@Column(name = "order", nullable = false)
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productType")

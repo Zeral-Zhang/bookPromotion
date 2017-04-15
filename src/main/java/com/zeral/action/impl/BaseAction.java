@@ -10,7 +10,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.opensymphony.xwork2.ActionSupport;
 import com.zeral.exception.BaseException;
 import com.zeral.po.UserInfo;
 /**
@@ -20,9 +19,7 @@ import com.zeral.po.UserInfo;
  * @date 2016-10-17
  *
  */
-public class BaseAction extends ActionSupport {
-	
-	private static final long serialVersionUID = 1L;
+public class BaseAction {
 	
 	protected final Logger log = Logger.getLogger(this.getClass());
 	protected UserInfo user;

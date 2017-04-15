@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
@@ -12,7 +11,7 @@
 <!-- Required meta tags always come first -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>文理后院</title>
+<title>图书分享</title>
 <!-- Bootstrap CSS -->
 <link href="<%=path%>/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" media="all" />
@@ -54,10 +53,10 @@
 											data-src="holder.js/80px180?text=走丢了Y.Y" alt="图片走丢了">
 									</div>
 									<div class="card-block">
-										<p class="card-title">${product.productName}，${product.brand }</p>
+										<p class="card-title">${product.productName}</p>
 									</div>
 								</a>
-								<p class="card-text">￥${product.price}</p>
+								<p class="card-text">作者：${product.author }</p>
 							</div>
 						</div>
 					</c:forEach>

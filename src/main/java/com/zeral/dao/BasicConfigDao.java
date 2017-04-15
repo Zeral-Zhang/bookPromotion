@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.zeral.bean.AccessToken;
-import com.zeral.constant.BookPromotionConstant;
 import com.zeral.po.BasicConfig;
 
 
@@ -54,9 +53,9 @@ public class BasicConfigDao extends BaseDao<BasicConfig, String> {
 		return findByHQL(hql, "max%Size");
 	}
 
-	public AccessToken getToken() {
+	public AccessToken getToken(String basicConfigId) {
 		AccessToken accessToken = null;
-		BasicConfig token = findByBasicConfigId(BookPromotionConstant.ACCESS_TOKEN);
+		BasicConfig token = findByBasicConfigId(basicConfigId);
 		if(null != token) {
 			accessToken = new AccessToken();
 			accessToken.setToken(token.getValue());
@@ -65,11 +64,11 @@ public class BasicConfigDao extends BaseDao<BasicConfig, String> {
 		return accessToken;
 	}
 	
-	public void setToken(AccessToken token) throws Exception {
+	public void setToken(AccessToken token, String basicConfigId) throws Exception {
 		if(null != token) {
-			BasicConfig config = findByBasicConfigId(BookPromotionConstant.ACCESS_TOKEN);
+			BasicConfig config = findByBasicConfigId(basicConfigId);
 			if(null == config) {
-				config = new BasicConfig(BookPromotionConstant.ACCESS_TOKEN, String.valueOf(System.currentTimeMillis()/1000+token.getExpiresIn()), token.getToken());
+				config = new BasicConfig(basicConfigId, String.valueOf(System.currentTimeMillis()/1000+token.getExpiresIn()), token.getToken());
 			} else {
 				config.setName(String.valueOf(System.currentTimeMillis()/1000+token.getExpiresIn()));
 				config.setValue(token.getToken());

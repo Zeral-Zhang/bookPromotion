@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
@@ -8,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+<title>分享图书</title>
 <meta charset="utf-8" />
 <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
 		Remove this if you use the .htaccess -->
@@ -24,7 +24,6 @@
 <link rel="stylesheet" href="<%=path%>/css/weui.css">
 <link rel="stylesheet" href="<%=path%>/css/alertify.min.css">
 <link rel="stylesheet" href="<%=path%>/css/themes/bootstrap.min.css">
-<link href="<%=path%>/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 	<!-- 顶部导航 -->
@@ -32,7 +31,7 @@
 		<!-- 按钮 -->
 		<nav class="navbar navbar-light bg-faded about_nav">
 			<a href="javascript:history.go(-1);"><span class="go_back"></span></a>
-			<span class="container">添加商品</span>
+			<span class="container">分享图书</span>
 		</nav>
 	</div>
 	<div class="container">
@@ -40,49 +39,33 @@
 			<div class="weui-cells weui-cells_form">
 				<div class="weui-cell">
 					<div class="weui-cell__hd">
-						<label class="weui-label">商品名称</label>
+						<label class="weui-label">图书名称</label>
 					</div>
 					<div class="weui-cell__bd">
-						<input class="weui-input" placeholder="请输入商品名称" name="productName" type="text"/>
+						<input class="weui-input" placeholder="请输入图书名称" name="productName" type="text"/>
 					</div>
 				</div>
 				<div class="weui-cell">
 					<div class="weui-cell__hd">
-						<label class="weui-label">品牌</label>
+						<label class="weui-label">作者</label>
 					</div>
 					<div class="weui-cell__bd">
-						<input class="weui-input" placeholder="请输入商品品牌" name="brand" type="text" />
+						<input class="weui-input" placeholder="请输入图书作者" name="author" type="text" />
 					</div>
 				</div>
 				<div class="weui-cell">
-	                <div class="weui-cell__hd"><label class="weui-label">商品数量</label></div>
+	                <div class="weui-cell__hd"><label class="weui-label">图书数量</label></div>
 	                <div class="weui-cell__bd">
-	                    <input class="weui-input" type="number" name="number" pattern="[0-9]*" placeholder="商品数量"/>
+	                    <input class="weui-input" type="number" name="number" pattern="[0-9]*" placeholder="图书数量"/>
 	                </div>
            	 	</div>
 				<div class="weui-cell">
-	                <div class="weui-cell__hd">
-	                	<label for="" class="weui-label">购买日期</label>
-	                </div>
+	                <div class="weui-cell__hd"><label class="weui-label">图书价格</label></div>
 	                <div class="weui-cell__bd">
-	                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-							<input id="buydate" name="buyDate" class="form-control" size="16" type="text" value="" readonly> 
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-remove"></span>
-								</span> 
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-	                </div>
-           		 </div>
-				<div class="weui-cell">
-	                <div class="weui-cell__hd"><label class="weui-label">商品价格</label></div>
-	                <div class="weui-cell__bd">
-	                    <input class="weui-input" type="number" name="price" pattern="[0-9]*" placeholder="商品价格"/>
+	                    <input class="weui-input" type="number" name="price" pattern="[0-9]*" placeholder="图书价格"/>
 	                </div>
            	 	</div>
-           	 	<div class="weui-cells__title">商品类别</div>
+           	 	<div class="weui-cells__title">图书类别</div>
 				<div class="weui-cells">
 					<div class="weui-cell weui-cell_select weui-cell_select-before">
 						<div class="weui-cell__hd">
@@ -93,7 +76,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="weui-cells__title">商品状态</div>
+				<div class="weui-cells__title">图书状态</div>
 				<div class="weui-cells">
 					<div class="weui-cell weui-cell_select weui-cell_select-before">
 						<div class="weui-cell__hd">
@@ -108,6 +91,14 @@
 						</div>
 					</div>
 				</div>
+				<div class="weui-cells__title">图书描述</div>
+				<div class="weui-cells weui-cells_form">
+		            <div class="weui-cell">
+		                <div class="weui-cell__bd">
+		                    <textarea id="bookContext" name="context"></textarea>
+		                </div>
+		            </div>
+		        </div>
            	 	<div class="page__bd">
 			        <div class="weui-gallery" id="gallery">
 			            <span class="weui-gallery__img" id="galleryImg"></span>
@@ -150,12 +141,16 @@
 	<script src="<%=path%>/js/jquery.min.js"></script>
 	<script src="<%=path%>/bootstrap/js/bootstrap.js"></script>
 	<script src="<%=path%>/js/alertify.min.js"></script>
-	<!-- Datatimepicker -->
-	<script type="text/javascript" src="<%=path%>/plugins/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-	<script type="text/javascript" src="<%=path%>/plugins/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script src='<%=path%>/plugins/tinymce/tinymce.min.js'></script>
 	<script>
       $(function () {
-      // 初始化商品类别信息
+    	// 初始化富文本编辑器
+   	  	tinymce.init({
+   		    selector: '#bookContext',
+   		    menubar: false,
+   		 	language: 'zh_CN',
+   		  });
+      // 初始化图书类别信息
 		$.get("initProductType", function(data) {
 			$.each(data, function(i, item) {
 					$("#productType").append(
@@ -173,16 +168,6 @@
 	                 return false;//返回false那么表单将不提交
 	             }
 	         };
-			$('.form_date').datetimepicker({
-				language : 'zh-CN',
-				weekStart : 1,
-				todayBtn : 1,
-				autoclose : 1,
-				todayHighlight : 1,
-				startView : 2,
-				minView : 2,
-				forceParse : 0
-			});
 		});
 	      var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)">' +
 	      		     '<input type="hidden" id="#id#" name="#name#" value="#value#"/>' +
@@ -198,7 +183,7 @@
 	      ;
 	
 		 $("form").submit(function(e){
-			var inputs = $(':input:not([id="uploaderInput"])', $(this));
+			var inputs = $('input[id!="uploaderInput"]', $(this));
 			// 表单项未填写不能提交表单
 			for(var i=0, len=inputs.length; i < len; i++) {
 				if(inputs[i].value == "") {
@@ -289,14 +274,17 @@
 	  $galleryDel.on("click", function() {
 		var fileId = $(this).attr("name");
 		$.ajax({  
-            url: "<%=path%>/delFile.action",  
-            type: "POST",  
-            data: "fileInfo.id="+fileId,
-            success: function(){
-            	$("li input[id="+fileId+"]", $uploaderFiles).parent().remove();
-            	fileCounter-=1;
-            	$('.weui-uploader__info').text(fileCounter+'/5'); 
-            	$gallery.fadeOut(100);
+            url: "<%=path%>/delFile/" + fileId,
+            dataType: 'json',
+            success: function(result){
+            	if(result.type == 'success') {
+            		$("li input[id="+fileId+"]", $uploaderFiles).parent().remove();
+                	fileCounter-=1;
+                	$('.weui-uploader__info').text(fileCounter+'/5'); 
+                	$gallery.fadeOut(100);	
+            	} else {
+            		alertify.error(result.msg);
+            	}
             }
 		}); 
 	  });

@@ -167,7 +167,7 @@ public class WebUtil {
 		}
 	}
 
-	public static HttpSession getSession() {
+	public static final HttpSession getSession() {
 		HttpSession session = null;
 		try {
 			session = getRequest().getSession();
@@ -177,7 +177,7 @@ public class WebUtil {
 		return session;
 	}
 
-	public static HttpServletRequest getRequest() {
+	public static final HttpServletRequest getRequest() {
 		ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		return attrs.getRequest();
 	}

@@ -24,7 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
- * 商品信息表
+ * 图书信息表
  * @author Zeral
  *
  */
@@ -37,7 +37,7 @@ public class ProductInfo implements java.io.Serializable {
 	
 	private String productId;
 	/**
-	 * 商品类型
+	 * 图书类型
 	 */
 	private ProductType productType;
 	/**
@@ -45,13 +45,13 @@ public class ProductInfo implements java.io.Serializable {
 	 */
 	private String userInfoId;
 	/**
-	 * 商品名称
+	 * 图书名称
 	 */
 	private String productName;
 	/**
-	 * 商标
+	 * 作者
 	 */
-	private String brand;
+	private String author;
 	/**
 	 * 描述
 	 */
@@ -68,10 +68,6 @@ public class ProductInfo implements java.io.Serializable {
 	 * 数量
 	 */
 	private Integer number;
-	/**
-	 * 购买日期
-	 */
-	private Date buyDate;
 	/**
 	 * 发布日期
 	 */
@@ -136,13 +132,13 @@ public class ProductInfo implements java.io.Serializable {
 		this.productName = productName;
 	}
 
-	@Column(name = "brand", length = 20)
-	public String getBrand() {
-		return this.brand;
+	@Column(name = "author", length = 20)
+	public String getAuthor() {
+		return this.author;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	@Column(name = "context", length = 65535)
@@ -180,16 +176,6 @@ public class ProductInfo implements java.io.Serializable {
 
 	public void setNumber(Integer number) {
 		this.number = number;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "buy_date", length = 10)
-	public Date getBuyDate() {
-		return this.buyDate;
-	}
-
-	public void setBuyDate(Date buyDate) {
-		this.buyDate = buyDate;
 	}
 
 	@Temporal(TemporalType.DATE)

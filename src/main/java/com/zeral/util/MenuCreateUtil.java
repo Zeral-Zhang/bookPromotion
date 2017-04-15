@@ -43,40 +43,40 @@ public class MenuCreateUtil {
 
 	private static Menu getMenu() {
 		CommenButton btn11 = new CommenButton();
-		btn11.setName("旧物出售");
+		btn11.setName("分享书籍");
 		btn11.setType("click");
 		btn11.setType("view");
-		btn11.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toProductAdd");
+		btn11.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/toProductAdd");
 
 		CommenButton btn12 = new CommenButton();
-		btn12.setName("学院查询");
+		btn12.setName("发现");
 		btn12.setType("click");
 		btn12.setType("view");
-		btn12.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toDiscovery");
+		btn12.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/toDiscovery");
 
 		CommenButton btn13 = new CommenButton();
-		btn13.setName("进入后院");
+		btn13.setName("分享空间");
 		btn13.setType("click");
 		btn13.setType("view");
-		btn13.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toProductList");
+		btn13.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/toProductList");
 
 		CommenButton btn21 = new CommenButton();
 		btn21.setName("我的订单");
 		btn21.setType("click");
 		btn21.setType("view");
-		btn21.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toUserPayed");
+		btn21.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/toUserPayed");
 
 		CommenButton btn22 = new CommenButton();
-		btn22.setName("我的旧物");
+		btn22.setName("我的分享");
 		btn22.setType("click");
 		btn22.setType("view");
-		btn22.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/toUserSaling");
+		btn22.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/toUserSaling");
 		
 		CommenButton btn23 = new CommenButton();
 		btn23.setName("我的购物车");
 		btn23.setType("click");
 		btn23.setType("view");
-		btn23.setUrl(BookPromotionConstant.SERVER_URL+"wenlibackyard/shopCar");
+		btn23.setUrl(BookPromotionConstant.SERVER_URL+"bookPromotion/shopCar");
 
 		CommenButton btn31 = new CommenButton();
 		btn31.setName("团队介绍");
@@ -84,15 +84,15 @@ public class MenuCreateUtil {
 		btn31.setKey("31");
 
 		ComplexButton mainBtn1 = new ComplexButton();
-		mainBtn1.setName("文理后院");
+		mainBtn1.setName("分享中心");
 		mainBtn1.setSub_button(new CommenButton[] { btn11, btn12, btn13 });
 
 		ComplexButton mainBtn2 = new ComplexButton();
-		mainBtn2.setName("我的后院");
+		mainBtn2.setName("我的分享");
 		mainBtn2.setSub_button(new CommenButton[] { btn21, btn22, btn23 });
 
 		ComplexButton mainBtn3 = new ComplexButton();
-		mainBtn3.setName("关于我们");
+		mainBtn3.setName("关于我");
 		mainBtn3.setSub_button(new CommenButton[] { btn31 });
 
 		Menu menu = new Menu();

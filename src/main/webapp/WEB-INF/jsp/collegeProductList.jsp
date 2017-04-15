@@ -23,17 +23,22 @@
 			<!-- 按钮 -->
 			<nav class="navbar navbar-light bg-faded about_nav">
 				<a href="javascript:history.go(-1);"><span class="go_back"></span></a>
-				<span class="container">学院商品列表</span>
+				<span class="container">学院分享图书列表</span>
 			</nav>
 		</div>
 				<!-- 页面中部 -->
 		<div class="middle container-fluid">
-			<!-- 商品卡片 -->
+			<!-- 图书卡片 -->
 			<div class="mid_card">
 				<div class="row card-group">
 					<c:if test="${empty pageBean.pagelist}">
 						<div class="container">
-	                        <p>没有商品数据呦(○´･д･)ﾉ        o(>﹏<)o不要啊      (°ー°〃)</p>
+							<div class="jumbotron">
+								<h1>暂无图书</h1>
+								<p>
+									没有图书数据呦     o(>﹏<)o不要啊      (°ー°〃)
+								</p>
+							</div>
 						</div>
 					</c:if>
 					<c:forEach items="${pageBean.pagelist}" var="product">
@@ -46,10 +51,10 @@
 											data-src="holder.js/80px180?text=走丢了Y.Y" alt="图片走丢了">
 									</div>
 									<div class="card-block">
-										<p class="card-title">${product.productName}，${product.brand }</p>
+										<p class="card-title">${product.productName}</p>
 									</div>
 								</a>
-								<p class="card-text">￥${product.price}</p>
+								<p class="card-text">作者：${product.author }</p>
 							</div>
 						</div>
 					</c:forEach>

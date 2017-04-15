@@ -13,7 +13,6 @@
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<spring.simple-xml.version>2.6.7</spring.simple-xml.version>
 		<hibernate.version>4.3.8.Final</hibernate.version>
-		<struts2.version>2.3.20</struts2.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<spring.simple-xml.version>2.6.7</spring.simple-xml.version>
 		<c3p0.version>0.9.1.2</c3p0.version>
@@ -25,6 +24,7 @@
 		<jstl.version>1.2</jstl.version>
 		<xstream.version>1.4.7</xstream.version>
 		<sfjson.version>2.4</sfjson.version>
+		<commons-fileupload.version>1.3.1</commons-fileupload.version>
 	</properties>
 
 	<repositories>
@@ -36,13 +36,6 @@
 	</repositories>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-spring-plugin -->
-		<dependency>
-		    <groupId>org.apache.struts</groupId>
-		    <artifactId>struts2-spring-plugin</artifactId>
-		    <version>2.5.2</version>
-		</dependency>
-		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -99,6 +92,13 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!-- commons-io -->
+		<dependency>  
+		        <groupId>commons-fileupload</groupId>  
+		        <artifactId>commons-fileupload</artifactId>  
+		        <version>${commons-fileupload.version}</version>  
+		</dependency>
+		
 		<!-- aspectjweaver -->
 		<dependency>
 			<groupId>org.aspectj</groupId>

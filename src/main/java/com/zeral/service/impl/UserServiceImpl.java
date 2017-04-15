@@ -1,21 +1,17 @@
 package com.zeral.service.impl;
 
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zeral.bean.AccessToken;
 import com.zeral.dao.BaseDao;
-import com.zeral.dao.BasicConfigDao;
 import com.zeral.dao.UserDetailInfoDao;
-import com.zeral.exception.BaseException;
 import com.zeral.po.UserDetailInfo;
 import com.zeral.po.UserInfo;
+import com.zeral.service.IBasicConfigService;
 import com.zeral.service.ISchoolInfoService;
 import com.zeral.service.IUserService;
 import com.zeral.util.HttpsUtil;
-import com.zeral.util.PropertiesConfigUtil;
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements IUserService {
 	@Autowired
@@ -23,7 +19,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements 
 	@Autowired
 	private ISchoolInfoService schoolInfoService;
 	@Autowired
-	private BasicConfigDao configDao;
+	private IBasicConfigService basicConfigService;
 
 	public UserDetailInfo findUserDetail(String openId) {
 		return userInfoDao.findByUserId(openId);
@@ -60,17 +56,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements 
 	 */
 	@Override
 	public UserInfo findByOpenId(String openId) {
-		AccessToken accessToken = configDao.getToken();
-		try {
-			Properties prop = PropertiesConfigUtil.getProperties("account.properties");
-			if(null == accessToken || System.currentTimeMillis()/1000 > accessToken.getExpiresIn()) {
-				accessToken = HttpsUtil.getAccessToken(prop.getProperty("appid"), prop.getProperty("appsecret"));
-				configDao.setToken(accessToken);
-			}
-		} catch (Exception e) {
-			throw new BaseException("获取微信用户信息失败");
+		AccessToken accessToken = basicConfigService.getValidAccessToken();
+		if(null != accessToken) {
+			return HttpsUtil.getUserInfo(accessToken.getToken(), openId);
+		} else {
+			return null;
 		}
-		return HttpsUtil.getUserInfo(accessToken.getToken(), openId);
 	}
 
 	@Override

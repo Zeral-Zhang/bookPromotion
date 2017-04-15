@@ -33,6 +33,7 @@ public class HttpsUtil {
 	private static Logger log = Logger.getLogger(HttpsUtil.class);
 	public final static String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 	public final static String MENU_CREATE_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+	public final static String JSAPI_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
 	
 	/**
 	 * 获取创建菜单凭证
@@ -57,6 +58,31 @@ public class HttpsUtil {
 			}
 		}
 		return accessToken;
+	}
+	
+	/**
+	 * 获取调用js接口凭证
+	 * @param appid
+	 * @param appsecret
+	 * @return
+	 */
+	public static AccessToken getJsapiTicket(String accessToken) {
+		AccessToken jsTicket = null;
+		String requestUrl = JSAPI_URL.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = httpsRequest(requestUrl, "GET", null);
+		// 如果请求成功
+		if(null != jsonObject) {
+			try {
+				jsTicket = new AccessToken();
+				jsTicket.setToken(jsonObject.getString("ticket"));
+				jsTicket.setExpiresIn(jsonObject.getInt("expires_in"));
+			} catch (JSONException e) {
+				jsTicket = null;
+				// 获取jsTicket失败
+				log.error("获取 jsTicket 失败 errcode："+jsonObject.getInt("errcode")+" errmsg: " + jsonObject.getString("errmsg"));
+			}
+		}
+		return jsTicket;
 	}
 	
 	/**

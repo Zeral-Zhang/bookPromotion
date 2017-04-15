@@ -2,9 +2,12 @@ package com.zeral.action.impl;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zeral.po.FileInfo;
@@ -19,7 +22,6 @@ import com.zeral.util.WebUtil;
  */
 @Controller
 public class FileAction extends BaseAction {
-	private static final long serialVersionUID = 1L;
 	
 	@Autowired
 	private IFileInfoService fileInfoService ;
@@ -40,10 +42,15 @@ public class FileAction extends BaseAction {
 		}
 	}
 	
-	public void delFile(FileInfo fileInfo) {
+	@RequestMapping(value = "/delFile/{fileId}", method = RequestMethod.GET)
+	public void delFile(@PathVariable String fileId, HttpServletResponse response) {
 		try {
-			fileInfoService.delFile(fileInfo.getId());
+			if(StringUtils.isNotBlank(fileId)) {
+				fileInfoService.delFile(fileId);
+			}
+			WebUtil.sendSuccessMsg("刪除成功", response);
 		} catch (Exception e) {
+			WebUtil.sendErrorMsg("删除失败", response);
 			e.printStackTrace();
 			log.error(e.getMessage(), e);
 		}

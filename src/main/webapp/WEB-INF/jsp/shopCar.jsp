@@ -45,7 +45,7 @@
 					<h3>我的购物车</h3>
 					<c:if test="${sessionScope.mycar == null || empty sessionScope.mycar.items}">
 						<div class="panel panel-default">
-						  <div class="label-pill">您的购物车为空，请先挑选喜欢的商品。</div>
+						  <div class="label-pill">您的购物车为空，请先挑选喜欢的图书。</div>
 						</div>
 					</c:if>
 					<c:if test="${not empty sessionScope.mycar and not empty sessionScope.mycar.items}">
@@ -54,9 +54,9 @@
 								<thead>
 									<tr>
 										<th>删除</th>
-										<th>商品</th>
+										<th>图书</th>
 										<th>数量</th>
-										<th>商品名称</th>
+										<th>图书名称</th>
 										<th>价格</th>
 									</tr>
 								</thead>
@@ -169,7 +169,7 @@
 				var productId = $(this).closest(".rem1").attr("id");
 				var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
 				if(newVal > $(this).data("number")) {
-					alertify.error('商品数量超过库存！');
+					alertify.error('图书数量超过库存！');
 					return;
 				}
 				window.location.href = "${pageContext.request.contextPath}/changeQuantity/" + productId +"?num=1";

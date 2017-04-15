@@ -135,6 +135,18 @@
 						</c:if>
 					</a>
 				</li>
+				<li class="list-group-item">
+					<a href="javascript:void(0)">积分
+						 <c:if test="${empty sessionScope.userInfo.userDetailInfo or empty sessionScope.userInfo.userDetailInfo.userPoints}">
+							<span style="float: right;">0</span>
+						</c:if> 
+						<c:if test="${not empty sessionScope.userInfo.userDetailInfo and not empty sessionScope.userInfo.userDetailInfo.userPoints}">
+							<span style="float: right;">
+								${sessionScope.userInfo.userDetailInfo.userPoints}
+							</span>
+						</c:if>
+					</a>
+				</li>
 			</ul>
 		</div>
 		<!-- /content -->

@@ -16,6 +16,10 @@ import org.hibernate.annotations.GenericGenerator;
  * @author Zeral
  *
  */
+/**
+ * @author ZeralZhang
+ *
+ */
 @Entity
 @Table(name = "user_detail_info")
 public class UserDetailInfo implements java.io.Serializable {
@@ -48,6 +52,10 @@ public class UserDetailInfo implements java.io.Serializable {
 	 * 用户年龄
 	 */
 	private Integer userAge;
+	/**
+	 * 用户积分
+	 */
+	private Integer userPoints;
 
 	// Constructors
 
@@ -123,4 +131,16 @@ public class UserDetailInfo implements java.io.Serializable {
 	public void setUserAge(Integer userAge) {
 		this.userAge = userAge;
 	}
+
+	@Column(name = "user_points", nullable = true)
+	public Integer getUserPoints() {
+		return userPoints;
+	}
+
+	
+	public void setUserPoints(Integer userPoints) {
+		this.userPoints = userPoints;
+	}
+	
+	
 }

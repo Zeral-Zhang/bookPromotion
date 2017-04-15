@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
@@ -12,7 +11,7 @@
 <!-- Required meta tags always come first -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>文理后院</title>
+<title>图书列表</title>
 <!-- Bootstrap CSS -->
 <link href="<%=path%>/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" media="all" />
@@ -30,7 +29,7 @@
 		    	<a href="<%=path %>/toProductAdd" class="add_btn"><img src="<%=path%>/images/add.png" /></a>
 			</div>
 			<div class="input-group" style="margin: 0 auto">
-			    	<input type="text" class="form-control" placeholder="请输入商品关键字" value="${search }" />
+			    	<input type="text" class="form-control" placeholder="请输入图书关键字" value="${search }" />
 			      	<span><a href="javascript:void(0);" class="search_btn"><img src="<%=path%>/images/search.png" /></a></span>
 		      	</div>
 			<button class="navbar-toggler nav_btn" type="button">
@@ -41,40 +40,7 @@
 		<div class="nav_pane">
 			<div class="container">
 				<ul class="nav_ul">
-					<div class="row">
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/1"> <img
-								src="<%=path%>/images/list/1.jpg" /> 电脑/配件
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/2"> <img
-								src="<%=path%>/images/list/2.jpg" /> 手机
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/3"> <img
-								src="<%=path%>/images/list/3.jpg" /> 相机/摄像机
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/4"> <img
-								src="<%=path%>/images/list/4.jpg" /> 女装
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/5"> <img
-								src="<%=path%>/images/list/5.jpg" /> 男装
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/6"> <img
-								src="<%=path%>/images/list/6.jpg" /> 化妆品
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/7"> <img
-								src="<%=path%>/images/list/7.jpg" /> 生活用品
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/8"> <img
-								src="<%=path%>/images/list/8.jpg" /> 书刊音像
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/9"> <img
-								src="<%=path%>/images/list/9.jpg" /> 交通工具
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/10"> <img
-								src="<%=path%>/images/list/10.jpg" /> 家用电器
-						</a></li>
-						<li class="col-xs-4"><a href="<%=path %>/toProductCateList/11"> <img
-								src="<%=path%>/images/list/11.jpg" /> 珠宝首饰
-						</a></li>
+					<div class="row" id="productType">
 					</div>
 				</ul>
 			</div>
@@ -126,10 +92,10 @@
 											data-src="holder.js/80px180?text=走丢了Y.Y" alt="图片走丢了">
 									</div>
 									<div class="card-block">
-										<p class="card-title">${product.productName}，${product.brand }</p>
+										<p class="card-title">${product.productName}</p>
 									</div>
 								</a>
-								<p class="card-text">￥${product.price}</p>
+								<p class="card-text">作者：${product.author }</p>
 							</div>
 						</div>
 					</c:forEach>
@@ -150,6 +116,18 @@
 	<script src="<%=path%>/js/jquery-ias.min.js"></script>
 	
 	<script type="text/javascript">
+		 // 初始化图书类别信息
+		$.get("initProductType", function(data) {
+			$.each(data, function(i, item) {
+					$("#productType").append(
+							"<li class='col-xs-4'>" 
+						   +"	<a href='<%=path %>/toProductCateList/"+item.productTypeId+"'>"
+						   +"		<img src='<%=path%>/images/list/"+item.productTypeId+".jpg' /> "+ item.productTypeName
+						   +"	</a>"
+						   +"</li>"
+					);
+				});
+		}, "json");
 	
 		$(".nav_btn").click(function(event) {
 			/* Act on the event */

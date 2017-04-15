@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,7 @@ public class ReginAction implements IRegionAction {
 	@RequestMapping(value="/loadCitys", method = RequestMethod.GET)
 	public void loadCitys(HttpServletResponse response) {
 		try {
-			String fcode = ServletActionContext.getRequest().getParameter("code");
+			String fcode = WebUtil.getRequest().getParameter("code");
 			if (!"".equals(fcode)) {
 				Integer fcodeInt = 0;
 				try {

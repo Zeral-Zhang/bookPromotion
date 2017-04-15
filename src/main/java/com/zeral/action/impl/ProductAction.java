@@ -30,8 +30,6 @@ import com.zeral.util.WebUtil;
 @Controller
 public class ProductAction extends BaseAction implements IProductAction {
 	
-	private static final long serialVersionUID = 1L;
-	
 	@Autowired
 	private IProductInfoService productInfoService;
 	@Autowired
@@ -73,7 +71,7 @@ public class ProductAction extends BaseAction implements IProductAction {
 	@RequestMapping(value = "/initProductType", method = RequestMethod.GET)
 	public void initProductType(HttpServletResponse response) {
 		try {
-			List<ProductType> productTypelst = productTypeService.findAll();
+			List<ProductType> productTypelst = productTypeService.findAll(Order.asc("order"));
 			WebUtil.sendJSONArrayResponse(productTypelst, new String[] { "productInfos" }, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,11 +129,28 @@ public class ProductAction extends BaseAction implements IProductAction {
 				ProductInfo productInfo = productInfoService.findDetail(productId);
 				productInfo.setUserInfo(userService.findByOpenId(productInfo.getUserInfoId()));
 				model.addAttribute(productInfo);
+				if(null == getLoginUser()) {
+					return "redirect:"+HttpsUtil.AuthLogin(BookPromotionConstant.VALIDATE_URL, "toProductDetail/"+productId);
+				}
 			}
 			return "productDetail";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
+	}
+
+	@Override
+	@RequestMapping(value="/deleteProduct/{productId}")
+	public void deleProduct(@PathVariable String productId, HttpServletResponse response) {
+		try {
+			if(StringUtils.isNotBlank(productId)) {
+				productInfoService.delete(productId);
+			}
+			WebUtil.sendSuccessMsg("删除商品成功", response);
+		} catch (Exception e) {
+			WebUtil.sendErrorMsg("删除商品出错", response);
+		}
+		
 	}
 }

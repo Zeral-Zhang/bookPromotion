@@ -66,7 +66,7 @@ public class CarAction implements ICarAction {
 				Map<String, ShopCarItem> items = car.remove(productId);
 				car.setItems(items);
 				car.sumPrice();
-				session.setAttribute("mycar", car);
+				session.removeAttribute("mycar");
 			}
 		} catch (Exception e) {
 			WebUtil.sendErrorMsg("删除商品出错", response);

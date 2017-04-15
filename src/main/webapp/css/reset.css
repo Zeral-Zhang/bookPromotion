@@ -119,10 +119,16 @@ img {
 	border-right: none;
 	padding: 0.5rem 0.5rem 0.2rem;
 	margin-bottom: 0.5rem;
+	text-align: center;
+    color: #999;
+    line-height: 20px;
 }
 
 .card img {
 	width: 100%;
+    height: 153px;
+    position: relative;
+    margin-bottom: 6px;
 }
 
 .card_img {
@@ -137,7 +143,6 @@ img {
 }
 
 .card .card-text {
-	color: #D00000;
 	font-size: 87.5%;
 	margin-bottom: 0.15rem;
 }

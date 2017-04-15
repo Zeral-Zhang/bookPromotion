@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
@@ -42,14 +41,14 @@
 	                	<c:forEach items="${orderMain.orderDetails }" var="orderDetail">
 	                		 <a href="${pageContext.request.contextPath}/toProductDetail/${orderDetail.productInfo.productId}" class="weui-media-box weui-media-box_appmsg">
 			                    <div class="weui-media-box__hd">
-			                        <img class="weui-media-box__thumb" src="${orderDetail.productInfo.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
+			                        <img class="weui-media-box__thumb" src="<%=path%>${orderDetail.productInfo.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
 			                    </div>
 			                    <div class="weui-media-box__bd">
 			                        <h4 class="weui-media-box__title">${orderDetail.productInfo.productName }</h4>
-			                        <p class="weui-media-box__desc">${orderDetail.productInfo.context }</p>
+			                        <p class="weui-media-box__desc">${orderDetail.productInfo.author }</p>
 			                        <ul class="weui-media-box__info">
 				                        <li class="weui-media-box__info__meta">*购买数量：${orderDetail.num }</li>
-				                        <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">￥${orderDetail.sumPrice }</li>
+				                        <li class="weui-media-box__info__meta">￥${orderDetail.sumPrice }</li>
 				                    </ul>
 			                    </div>
 			                </a>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import com.zeral.service.ISchoolInfoService;
 import com.zeral.service.IUserService;
 import com.zeral.util.HttpsUtil;
 import com.zeral.util.PropertiesConfigUtil;
+import com.zeral.util.WebUtil;
 
 /**
  * @author Zeral_Zhang
@@ -34,8 +36,6 @@ import com.zeral.util.PropertiesConfigUtil;
  */
 @Controller
 public class UserAction extends BaseAction implements IUserAction {
-
-	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private IUserService userService;
@@ -154,6 +154,36 @@ public class UserAction extends BaseAction implements IUserAction {
 			return "error";
 		}
 		return "redirect:toUserDetail";
+	}
+
+	@Override
+	@RequestMapping(value="/updateUserPoints", method = RequestMethod.GET)
+	public void updateUserPoints(HttpServletRequest request, HttpServletResponse response) {
+		String firstShareUserId = request.getParameter("firstShareUserId");
+		String shareUserId = request.getParameter("shareUserId");
+		if(StringUtils.isNotBlank(firstShareUserId) && StringUtils.isBlank(shareUserId)) {
+			updateUserPoint(firstShareUserId);
+			WebUtil.sendSuccessMsg("分享成功，你的积分+1", response);
+		} else if(StringUtils.isNotBlank(shareUserId) && (!firstShareUserId.equals(shareUserId))) {
+			// 有第一个分享者，也有第二个分享者时，并且不是同一个人时，两人积分都+1分
+			updateUserPoint(firstShareUserId);
+			updateUserPoint(shareUserId);
+			WebUtil.sendSuccessMsg("分享成功，你和原始分享人的积分都+1", response);
+		} else {
+			WebUtil.sendErrorMsg("无效分享", response);
+		}
+	}
+	
+	public void updateUserPoint(String userId) {
+		UserDetailInfo shareUser = userService.findUserDetail(userId);
+		if(null != shareUser) {
+			shareUser.setUserPoints(shareUser.getUserPoints()+1);
+		}else {
+			shareUser = new UserDetailInfo();
+			shareUser.setUserInfo(userId);
+			shareUser.setUserPoints(1);
+		}
+		userService.saveOrUpdate(shareUser);
 	}
 
 }

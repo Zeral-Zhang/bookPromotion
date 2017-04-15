@@ -37,12 +37,12 @@
 				</li>
 				<li class="list-group-item">
 					<a href="<%=path %>/toUserSaling">
-						<div class="list_img1"></div>正在售卖<span class="label label-default label-pill stay_right">1</span>
+						<div class="list_img1"></div>我的分享<span class="label label-default label-pill stay_right">1</span>
 					</a>
 				</li>
 				<li class="list-group-item">
 					<a href="<%=path %>/toProductAdd">
-						<div class="list_img2"></div>添加商品<span class="label label-default label-pill stay_right">2</span>
+						<div class="list_img2"></div>分享图书<span class="label label-default label-pill stay_right">2</span>
 					</a>
 				</li>
 				<li class="list-group-item">

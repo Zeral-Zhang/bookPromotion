@@ -1,7 +1,7 @@
 -- 创建收藏夹表
 CREATE TABLE `favorite` (
   `favorite_id` VARCHAR(32) NOT NULL COMMENT '收藏夹编号',
-  `product_id` VARCHAR(32) NOT NULL COMMENT '商品编号',
+  `product_id` VARCHAR(32) NOT NULL COMMENT '图书编号',
   `user_id` varchar(60) NOT NULL COMMENT '用户编号',
   `create_date` date NOT NULL COMMENT '收藏时间',
   `context` varchar(50) DEFAULT NULL COMMENT '备注',
@@ -12,9 +12,9 @@ CREATE TABLE `favorite` (
 CREATE TABLE `order_detail` (
   `order_detail_id` VARCHAR(32) NOT NULL COMMENT '订单明细表编号',
   `order_main_id` VARCHAR(32) NOT NULL COMMENT '订单主表编号',
-  `product_id` VARCHAR(32) NOT NULL COMMENT '商品编号',
+  `product_id` VARCHAR(32) NOT NULL COMMENT '图书编号',
   `num` int(11) NOT NULL COMMENT '订购数量',
-  `sum_price` float(7,2) DEFAULT '0.00' COMMENT '单个商品总价',
+  `sum_price` float(7,2) DEFAULT '0.00' COMMENT '单个图书总价',
   PRIMARY KEY (`order_detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单明细表';
 
@@ -44,32 +44,32 @@ CREATE TABLE `order_main` (
   PRIMARY KEY (`order_main_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单主表';
 
--- 创建商品表
+-- 创建图书表
 CREATE TABLE `product_info` (
-  `product_id` VARCHAR(32) NOT NULL COMMENT '商品编号',
-  `product_name` varchar(20) NOT NULL COMMENT '商品名称',
-  `product_type_id` VARCHAR(32) NOT NULL COMMENT '商品类别编号',
+  `product_id` VARCHAR(32) NOT NULL COMMENT '图书编号',
+  `product_name` varchar(20) NOT NULL COMMENT '图书名称',
+  `product_type_id` VARCHAR(32) NOT NULL COMMENT '图书类别编号',
   `user_id` varchar(60) NOT NULL COMMENT '用户编号',
-  `number` int(11) NOT NULL COMMENT '商品数量',
-  `brand` varchar(20) DEFAULT NULL COMMENT '商品品牌',
-  `context` text  COMMENT '商品描述',
-  `imgs` text NOT NULL COMMENT '商品图片',
-  `price` float(7,2)  DEFAULT '0.00' COMMENT '商品价格',
-  `buy_date` date NOT NULL COMMENT '购买日期',
+  `number` int(11) NOT NULL COMMENT '图书数量',
+  `author` varchar(20) DEFAULT NULL COMMENT '图书作者',
+  `context` text  COMMENT '图书描述',
+  `imgs` text NOT NULL COMMENT '图书图片',
+  `price` float(7,2)  DEFAULT '0.00' COMMENT '图书价格',
   `pb_date` date NOT NULL COMMENT '发布日期',
-  `state` int(11) NOT NULL COMMENT '商品状态（0-未上架，1-已上架，2-缺货）',
+  `state` int(11) NOT NULL COMMENT '图书状态（0-未上架，1-已上架，2-缺货）',
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图书表';
 
--- 创建商品类别表
+-- 创建图书类别表
 CREATE TABLE `product_type` (
-  `product_type_id` VARCHAR(32) NOT NULL COMMENT '商品类别编号',
+  `product_type_id` VARCHAR(32) NOT NULL COMMENT '图书类别编号',
   `parent_id` VARCHAR(32) NOT NULL COMMENT '父编号',
-  `product_type_name` varchar(20) NOT NULL COMMENT '商品类别名称',
+  `product_type_name` varchar(20) NOT NULL COMMENT '图书类别名称',
   `is_Delete` int(11) NOT NULL DEFAULT '1' COMMENT '是否可用,默认可用',
   `context` varchar(50) DEFAULT NULL COMMENT '备注',
+  `order` int(11) NOT NULL COMMENT '排序',
   PRIMARY KEY (`product_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品类别表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图书类别表';
 
 -- 创建院系信息表
 CREATE TABLE `school_info` (
@@ -90,6 +90,7 @@ CREATE TABLE `user_detail_info` (
   `user_class` varchar(10) DEFAULT NULL COMMENT '学生班级',
   `user_grade` varchar(4) DEFAULT NULL COMMENT '学生年级',
   `user_Id` varchar(60) NOT NULL COMMENT '用户信息编号',
+  `user_points`  int(11) NULL DEFAULT 0 '用户积分',
   PRIMARY KEY (`user_detail_id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户详细信息表';

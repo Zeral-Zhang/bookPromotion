@@ -16,6 +16,12 @@ public interface IProductAction {
 	public String addProduct(ProductInfo productInfo);
 	
 	/**
+	 * 删除商品
+	 * @param productId 商品id
+	 */
+	public void deleProduct(String productId, HttpServletResponse response);
+	
+	/**
 	 * 初始化商品类别信息
 	 * 
 	 */

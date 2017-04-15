@@ -1,6 +1,7 @@
 package com.zeral.action;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
@@ -26,6 +27,13 @@ public interface IUserAction {
 	 * @return
 	 */
 	public String update(UserDetailInfo detailInfo);
+	
+	/**
+	 * 修改用户积分信息
+	 * 
+	 * @return
+	 */
+	public void updateUserPoints(HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 初始化登陆

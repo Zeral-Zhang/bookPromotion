@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
@@ -22,6 +21,7 @@
 <link rel="stylesheet" href="<%=path%>/bootstrap/css/bootstrap.css" type="text/css" media="all" />
 <link rel="stylesheet" href="<%=path%>/css/reset.css">
 <link rel="stylesheet" href="<%=path%>/css/weui.css">
+<link rel="stylesheet" href="<%=path%>/css/alertify.min.css">
 <link rel="stylesheet" href="<%=path%>/css/themes/bootstrap.min.css">
 </head>
 <body>
@@ -30,27 +30,32 @@
 		<!-- 按钮 -->
 		<nav class="navbar navbar-light bg-faded about_nav">
 			<a href="<%=path%>/toUserInfo"><span class="go_back"></span></a>
-			<span class="container">正在售卖</span>
+			<span class="container">我的分享</span>
 		</nav>
 	</div>
 	<div class="container">
 		<div class="weui-panel weui-panel_access">
-            <div class="weui-panel__hd">我发布的商品列表</div>
+            <div class="weui-panel__hd">我分享的图书列表</div>
             <div class="weui-panel__bd">
             	<c:forEach items="${pageBean.pagelist}" var="product">
-            		<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}" class="weui-media-box weui-media-box_appmsg">
-	                    <div class="weui-media-box__hd">
-	                        <img class="weui-media-box__thumb" src="${product.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
-	                    </div>
-	                    <div class="weui-media-box__bd">
-	                        <h4 class="weui-media-box__title">${product.productName }</h4>
-	                        <p class="weui-media-box__desc">${product.context }</p>
-	                        <ul class="weui-media-box__info">
-		                        <li class="weui-media-box__info__meta">发布日期：${product.pbDate }</li>
-		                        <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">价格：￥${product.price }</li>
-		                    </ul>
-	                    </div>
-               		 </a>
+            		<div id="${product.productId }">
+	            		<a href="${pageContext.request.contextPath}/toProductDetail/${product.productId}" class="weui-media-box weui-media-box_appmsg">
+		                    <div class="weui-media-box__hd">
+		                        <img class="weui-media-box__thumb" src="<%=path%>${product.fileSrcs[0]}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了" alt="图片走丢了">
+		                    </div>
+		                    <div class="weui-media-box__bd">
+		                        <h4 class="weui-media-box__title">${product.productName }</h4>
+		                        <p class="weui-media-box__desc">${product.author }</p>
+		                        <ul class="weui-media-box__info">
+			                        <li class="weui-media-box__info__meta">发布日期：${product.pbDate }</li>
+			                        <li class="weui-media-box__info__meta">价格：￥${product.price }</li>
+			                    </ul>
+		                    </div>
+			                <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+			                    <div class="weui-cell__bd delete" data-id="${product.productId }">删除分享</div>
+			                </a>    
+	               		 </a>
+               		 </div>
             	</c:forEach>
             </div>
             <div id="pagination">
@@ -65,8 +70,27 @@
 	<script src="<%=path%>/bootstrap/js/bootstrap.js"></script>
 	<script src="<%=path%>/js/holder.js"></script>
 	<script src="<%=path%>/js/jquery-ias.min.js"></script>
+	<script src="<%=path%>/js/alertify.min.js"></script>
 	<script>
 		$(function() {
+			$('.delete').on('click', function() {
+				var productId = $(this).data("id");
+				$.ajax({
+					   type: "get",
+					   url: "${pageContext.request.contextPath}/deleteProduct/"+productId,
+					   dataType: "json",
+					   success: function(msg){
+						   if(msg.type == 'success') {
+							   $('#'+productId).fadeOut('slow', function() {
+									 $('#'+productId).remove();
+								});							   
+						   } else {
+							   alertify.warning(msg.msg);
+						   }
+					   }
+					});
+			});
+			
 			 var ias = $.ias({
 			  container:  '.weui-panel__bd',
 			  item:       '.weui-media-box',

@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Service;
 
 import com.zeral.bean.req.MsgRequest;
@@ -18,18 +17,18 @@ import com.zeral.service.ICoreService;
 import com.zeral.util.MsgXmlUtil;
 import com.zeral.util.PropertiesConfigUtil;
 import com.zeral.util.SignUtil;
+import com.zeral.util.WebUtil;
 
 @Service
 public class CoreServiceImpl implements ICoreService {
 	private static final Logger log = Logger.getLogger(CoreServiceImpl.class);
 	
 	@Override
-	public void checkSignature() {
+	public void checkSignature(HttpServletResponse response) {
 		log.info("##### valid url ");
 		try {
 			Properties prop = PropertiesConfigUtil.getProperties("account.properties");
-			HttpServletRequest request = ServletActionContext.getRequest();
-			HttpServletResponse response = ServletActionContext.getResponse();
+			HttpServletRequest request = WebUtil.getRequest();
 			if (request.getParameter("timestamp") == null) {// 如果是空打印出首页
 				request.setCharacterEncoding("utf-8");
 				response.setContentType("text/html;charset=UTF-8");
@@ -58,10 +57,10 @@ public class CoreServiceImpl implements ICoreService {
 	}
 
 	@Override
-	public void handleRequest() {
+	public void handleRequest(HttpServletResponse response) {
 		log.info("##### process msg  ");
 		try {
-			HttpServletRequest request = ServletActionContext.getRequest();
+			HttpServletRequest request = WebUtil.getRequest();
 			MsgRequest msgRequest = MsgXmlUtil.parseXml(request);// 获取发送的消息
 
 			// 根据请求类型处理不同的请求
@@ -69,7 +68,7 @@ public class CoreServiceImpl implements ICoreService {
 					.getMsgType())) {
 				// 订阅
 				if (msgRequest.equals(MsgXmlUtil.EVENT_TYPE_SUBSCRIBE)) {
-					responseText(msgRequest, "感谢您的关注 /::) /::) /::)");
+					responseText(msgRequest, "感谢您的关注 /::) /::) /::)", response);
 				}
 				// 取消订阅
 				else if (msgRequest.equals(MsgXmlUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -79,12 +78,10 @@ public class CoreServiceImpl implements ICoreService {
 				else if (msgRequest.getEvent().equals(MsgXmlUtil.EVENT_TYPE_CLICK)) {
 					if(msgRequest.getEventKey().equals("31")) {
 						StringBuffer buffer = new StringBuffer();
-						buffer.append("我们的成员：").append("\n\n");
-						buffer.append("欧阳雪涛，LOL只会瑞文，和上路打单机，从不管队友").append("\n");
-						buffer.append("景园， 吃货，也有点懒，一天傻开心").append("\n");
-						buffer.append("蔡菲，人送外号菲姐，管事的").append("\n");
-						buffer.append("张星星， 天马行空，不切实际");
-						responseText(msgRequest, buffer.toString());
+						buffer.append("我：").append("\n\n");
+						buffer.append("天马行空，不切实际，我的个人网站：");
+						buffer.append("Http://zeral.site");
+						responseText(msgRequest, buffer.toString(), response);
 					}
 				}
 				
@@ -96,7 +93,7 @@ public class CoreServiceImpl implements ICoreService {
 				buffer.append("地理位置经度： " + msgRequest.getLocation_Y()).append("\n");
 				buffer.append("地图缩放大小： " + msgRequest.getScale()).append("\n");
 				buffer.append("地理位置信息： " + msgRequest.getLabel()).append("\n");
-				responseText(msgRequest, buffer.toString());
+				responseText(msgRequest, buffer.toString(), response);
 			} else if (MsgXmlUtil.REQ_MESSAGE_TYPE_TEXT.equals(msgRequest // 处理文本消息
 					.getMsgType())) {
 				if ("?".equals(msgRequest.getContent()) || "？".equals(msgRequest.getContent())) {
@@ -106,13 +103,13 @@ public class CoreServiceImpl implements ICoreService {
 					buffer.append("2 发布商品").append("\n");
 					buffer.append("3 我的订单").append("\n");
 					buffer.append("回复“?”显示此帮助菜单");
-					responseText(msgRequest, buffer.toString());
+					responseText(msgRequest, buffer.toString(), response);
 				} else if ("1".equals(msgRequest.getContent())) {
-					responseText(msgRequest, "这里是你的最新商品\nHttp://wenlibackyard.tunnel.qydev.com/wenlibackyard/toProductList");
+					responseText(msgRequest, "这里是你的最新商品\nHttp://wenlibackyard.tunnel.qydev.com/bookPromotion/toProductList", response);
 				} else if ("2".equals(msgRequest.getContent())) {
-					responseText(msgRequest, "这里可以发布商品\nHttp://wenlibackyard.tunnel.qydev.com/wenlibackyard/toProductAdd");
+					responseText(msgRequest, "这里可以发布商品\nHttp://wenlibackyard.tunnel.qydev.com/bookPromotion/toProductAdd", response);
 				} else if ("3".equals(msgRequest.getContent())) {
-					responseText(msgRequest, "这里是你的订单\nHttp://wenlibackyard.tunnel.qydev.com/wenlibackyard/toUserPayed");
+					responseText(msgRequest, "这里是你的订单\nHttp://wenlibackyard.tunnel.qydev.com/bookPromotion/toUserPayed", response);
 				} else {
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("您好，这里是文理后院，请回复数字选择服务：").append("\n\n");
@@ -120,19 +117,18 @@ public class CoreServiceImpl implements ICoreService {
 					buffer.append("2 发布商品").append("\n");
 					buffer.append("3 我的订单").append("\n");
 					buffer.append("回复“?”显示此帮助菜单");
-					responseText(msgRequest, buffer.toString());
+					responseText(msgRequest, buffer.toString(), response);
 				}
 			} else {
-				responseText(msgRequest, "你的请求类型暂时无法处理，请尝试其它方式 /::) /::) /::)");
+				responseText(msgRequest, "你的请求类型暂时无法处理，请尝试其它方式 /::) /::) /::)", response);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("process msg exception", e);
 		}
 	}
 	
-	private void responseText(MsgRequest msgRequest, String responseStr) {
+	private void responseText(MsgRequest msgRequest, String responseStr, HttpServletResponse response) {
 		log.info("##### response msg  ");
-		HttpServletResponse response = ServletActionContext.getResponse();
 		try {
 			MsgResponseText responseText = new MsgResponseText();
 			responseText.setToUserName(msgRequest.getFromUserName());
@@ -143,8 +139,7 @@ public class CoreServiceImpl implements ICoreService {
 			String str = MsgXmlUtil.textToXml(responseText);
 			log.info("##### response.write = " + str);
 
-			response.getWriter().write(
-					new String(str.getBytes("UTF-8"), "ISO8859-1"));
+			response.getWriter().write(str);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("response msg UnsupportedEncodingException", e);
 		} catch (IOException e) {
