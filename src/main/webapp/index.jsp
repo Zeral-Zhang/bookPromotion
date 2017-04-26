@@ -1,3 +1,3 @@
 <%
-	response.sendRedirect("toProductList.action");
+	response.sendRedirect("toProductList");
 %>

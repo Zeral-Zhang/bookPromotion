@@ -13,7 +13,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<title>500</title>
+		<title>页面错误</title>
 		<meta name="description" content="">
 		<meta name="author" content="Runaway">
 

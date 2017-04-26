@@ -33,4 +33,12 @@ public interface IOrderMainService extends IBaseService<OrderMain> {
 	 * @return
 	 */
 	public List<OrderMain> findOrderMain(PageBean pageBean, String userId);
+
+	/**
+	 * 保存订单并相应移除商品数量
+	 * @param myCar
+	 * @param user
+	 * @return
+	 */
+	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user);
 }

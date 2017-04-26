@@ -60,4 +60,9 @@ public class CoreAction implements ICoreAction {
 			e.printStackTrace();
 		}
 	}
+
+	@RequestMapping(value = "")
+	public String toIndex() {
+		return "redirect:/index.jsp";
+	}
 }

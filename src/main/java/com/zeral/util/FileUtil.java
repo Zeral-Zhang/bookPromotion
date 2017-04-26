@@ -13,6 +13,7 @@ public class FileUtil
   public static File getDestFile(String fileInfoName)
   {
     HttpServletRequest request = WebUtil.getRequest();
+    
     String dest = request.getServletContext().getRealPath("/") + BookPromotionConstant.UPLOAD_URL + getRelativeFilePath(fileInfoName);
     
     return new File(dest);

@@ -11,7 +11,7 @@
 		<!-- Required meta tags always come first -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<title>文理后院</title>
+		<title>图书分享列表</title>
 		<!-- Bootstrap CSS -->
 		<link href="<%=path %>/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="<%=path %>/css/reset.css" rel="stylesheet" type="text/css" media="all" />

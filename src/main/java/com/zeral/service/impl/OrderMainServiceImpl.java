@@ -16,8 +16,10 @@ import com.zeral.dao.BaseDao;
 import com.zeral.dao.OrderMainDao;
 import com.zeral.po.OrderDetail;
 import com.zeral.po.OrderMain;
+import com.zeral.po.ProductInfo;
 import com.zeral.po.UserInfo;
 import com.zeral.service.IOrderMainService;
+import com.zeral.service.IProductInfoService;
 
 @Service
 public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements IOrderMainService {
@@ -26,6 +28,8 @@ public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements 
 
 	@Autowired
 	private OrderMainDao orderMainDao;
+	@Autowired
+	private IProductInfoService productInfoService;
 
 	@Override
 	public List<OrderMain> findAllMain(String userId, PageBean pageBean) {
@@ -74,5 +78,20 @@ public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements 
 	@Override
 	public BaseDao<OrderMain, String> getDao() {
 		return orderMainDao;
+	}
+
+	@Override
+	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user) {
+		saveOrder(myCar, user);
+		Map<String, ShopCarItem> items = myCar.getItems();
+		for (String productInfoId : items.keySet()) {
+			ProductInfo product = productInfoService.findDetail(productInfoId);
+			product.setNumber(product.getNumber() - items.get(productInfoId).getNum());
+			if(product.getNumber().equals(0)) {
+				productInfoService.delete(productInfoId);
+			} else {
+				productInfoService.update(product);
+			}
+		}
 	}
 }

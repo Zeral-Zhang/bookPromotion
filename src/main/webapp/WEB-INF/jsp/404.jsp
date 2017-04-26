@@ -12,7 +12,7 @@
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<title>404</title>
+		<title>页面未找到</title>
 		<meta name="description" content="">
 		<meta name="author" content="Runaway">
 

@@ -2,9 +2,9 @@
 CREATE TABLE `favorite` (
   `favorite_id` VARCHAR(32) NOT NULL COMMENT '收藏夹编号',
   `product_id` VARCHAR(32) NOT NULL COMMENT '图书编号',
-  `user_id` varchar(60) NOT NULL COMMENT '用户编号',
+  `user_id` VARCHAR(60) NOT NULL COMMENT '用户编号',
   `create_date` date NOT NULL COMMENT '收藏时间',
-  `context` varchar(50) DEFAULT NULL COMMENT '备注',
+  `context` VARCHAR(50) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`favorite_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏夹表';
 
@@ -34,13 +34,13 @@ ALTER TABLE FILE_INFO COMMENT '附件';
 -- 创建订单主表
 CREATE TABLE `order_main` (
   `order_main_id` VARCHAR(32) NOT NULL COMMENT '订单主表编号',
-  `user_id` varchar(60) NOT NULL COMMENT '用户编号',
+  `user_id` VARCHAR(60) NOT NULL COMMENT '用户编号',
   `state` int(11) DEFAULT '0' COMMENT '销售单状态（0-未处理，1-已处理，2-以发货，3-已收货）',
   `buy_date` date DEFAULT NULL COMMENT '购买日期',
   `pay_date` date DEFAULT NULL COMMENT '付款日期',
   `confirm_date` date DEFAULT NULL COMMENT '确认日期',
   `sum_price` float(7,2) DEFAULT '0.00' COMMENT '总价',
-  `context` varchar(50) DEFAULT NULL COMMENT '备注',
+  `context` VARCHAR(50) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`order_main_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单主表';
 
@@ -74,9 +74,9 @@ CREATE TABLE `product_type` (
 -- 创建院系信息表
 CREATE TABLE `school_info` (
   `school_info_id` VARCHAR(32) NOT NULL COMMENT '校内信息编号',
-  `code` varchar(20) DEFAULT NULL COMMENT '院系编码',
-  `name` varchar(20) DEFAULT NULL COMMENT '院系名称',
-  `p_code` varchar(20) DEFAULT NULL COMMENT '父级编码',
+  `code` VARCHAR(20) DEFAULT NULL COMMENT '院系编码',
+  `name` VARCHAR(20) DEFAULT NULL COMMENT '院系名称',
+  `p_code` VARCHAR(20) DEFAULT NULL COMMENT '父级编码',
   `level` int(11) DEFAULT '0' COMMENT '级别',
   PRIMARY KEY (`school_info_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='院系信息表';
@@ -84,13 +84,13 @@ CREATE TABLE `school_info` (
 -- 创建用户详细信息表
 CREATE TABLE `user_detail_info` (
   `user_detail_id` VARCHAR(32) NOT NULL COMMENT '用户详细信息编号',
-  `user_tel` varchar(13) DEFAULT NULL COMMENT '用户电话号',
+  `user_tel` VARCHAR(13) DEFAULT NULL COMMENT '用户电话号',
   `user_age` int(11) NOT NULL DEFAULT '0' COMMENT '用户年龄',
-  `school_info_id` int(11) DEFAULT NULL COMMENT '校内信息编号',
-  `user_class` varchar(10) DEFAULT NULL COMMENT '学生班级',
-  `user_grade` varchar(4) DEFAULT NULL COMMENT '学生年级',
-  `user_Id` varchar(60) NOT NULL COMMENT '用户信息编号',
-  `user_points`  int(11) NULL DEFAULT 0 '用户积分',
+  `school_info_id` VARCHAR(32) DEFAULT NULL COMMENT '校内信息编号',
+  `user_class` VARCHAR(10) DEFAULT NULL COMMENT '学生班级',
+  `user_grade` VARCHAR(4) DEFAULT NULL COMMENT '学生年级',
+  `user_Id` VARCHAR(60) NOT NULL COMMENT '用户信息编号',
+  `user_points`  int(11) NULL DEFAULT '0' COMMENT '用户积分',
   PRIMARY KEY (`user_detail_id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户详细信息表';

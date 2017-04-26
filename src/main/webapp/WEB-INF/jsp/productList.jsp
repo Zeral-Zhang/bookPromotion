@@ -82,6 +82,16 @@
 			<!-- 商品卡片 -->
 			<div class="mid_card">
 				<div class="row card-group">
+					<c:if test="${empty pageBean.pagelist}">
+						<div class="container">
+							<div class="jumbotron">
+								<h1>暂无图书</h1>
+								<p>
+									没有图书数据呦     o(>﹏<)o不要啊      (°ー°〃)
+								</p>
+							</div>
+						</div>
+					</c:if>
 					<c:forEach items="${pageBean.pagelist}" var="product">
 						<div class="col-md-3 col-xs-6">
 							<div class="card">
