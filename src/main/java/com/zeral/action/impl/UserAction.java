@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,6 +18,7 @@ import com.zeral.action.IUserAction;
 import com.zeral.bean.PageBean;
 import com.zeral.bean.WeixinOauth2Token;
 import com.zeral.constant.BookPromotionConstant;
+import com.zeral.po.Favorite;
 import com.zeral.po.OrderMain;
 import com.zeral.po.ProductInfo;
 import com.zeral.po.SchoolInfo;
@@ -66,6 +68,7 @@ public class UserAction extends BaseAction implements IUserAction {
 			String openId = weixinOauth2Token.getOpenId();
 			// 获取用户信息
 			UserInfo userInfo = HttpsUtil.getSNSUserInfo(accessToken, openId);
+			userInfo.setUserDetailInfo(userService.findUserDetail(getLoginUser().getUserId()));
 			// 设置要传递的参数
 			request.getSession().setAttribute("userInfo", userInfo);
 			return "redirect:"+path;
@@ -84,7 +87,6 @@ public class UserAction extends BaseAction implements IUserAction {
 	public String toUserDetail(Model model) {
 		try {
 			UserInfo user = getLoginUser();
-			user.setUserDetailInfo(userService.findUserDetail(getLoginUser().getUserId()));
 			List<SchoolInfo> schoolInfolst = schoolInfoService.findColleges();
 			if (null != user.getUserDetailInfo() && null != user.getUserDetailInfo().getSchoolInfo()) {
 				List<SchoolInfo> departmentlst = schoolInfoService.findByCollegeId(user.getUserDetailInfo().getSchoolInfo().getPCode());
@@ -174,16 +176,61 @@ public class UserAction extends BaseAction implements IUserAction {
 		}
 	}
 	
+	@Override
+	@RequestMapping(value="/updateUserFavorite", method = RequestMethod.GET)
+	public void updateUserFavorite(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String productId = request.getParameter("bookId");
+			Boolean isFavorite = Boolean.valueOf(request.getParameter("isFavorite"));
+			if(isFavorite) {
+				userService.removeFavorite(productId, getLoginUser().getUserId());
+			} else {
+				userService.addFavorite(productId, getLoginUser().getUserId());
+			}
+			WebUtil.sendSuccessMsg("更新状态成功", response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			WebUtil.sendErrorMsg("更新状态失败", response);
+		}
+	}
+	
+	
 	public void updateUserPoint(String userId) {
 		UserDetailInfo shareUser = userService.findUserDetail(userId);
 		if(null != shareUser) {
-			shareUser.setUserPoints(shareUser.getUserPoints()+1);
+			shareUser.setUserPoints((null == shareUser.getUserPoints() ? 0 : shareUser.getUserPoints())+1);
 		}else {
 			shareUser = new UserDetailInfo();
 			shareUser.setUserInfo(userId);
 			shareUser.setUserPoints(1);
 		}
 		userService.saveOrUpdate(shareUser);
+	}
+
+	@Override
+	@RequestMapping(value="/toUserFavorite", method = RequestMethod.GET)
+	public String toUserFavorite(PageBean pageBean) {
+		try {
+			pageBean = pageBean == null ? new PageBean() : pageBean;
+			List<Favorite> lsemp = userService.findFavorites(pageBean, getLoginUser().getUserId());
+			pageBean.setPagelist(lsemp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+		return "userFavorite";
+	}
+	
+	@Override
+	@RequestMapping(value="/deleteFavorite/{favoriteId}", method = RequestMethod.GET)
+	public void deleteFavorite(@PathVariable String favoriteId, HttpServletResponse response) {
+		try {
+			userService.removeFavorite(favoriteId);
+			WebUtil.sendSuccessMsg("删除成功", response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			WebUtil.sendErrorMsg("删除失败", response);
+		}
 	}
 
 }

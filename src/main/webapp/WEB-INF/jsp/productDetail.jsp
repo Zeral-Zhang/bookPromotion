@@ -63,10 +63,6 @@
                     <label class="weui-form-preview__label">发布日期</label>
                     <span class="weui-form-preview__value"><fmt:formatDate value="${productInfo.pbDate}" type="date" pattern="yyyy-MM-dd"/></span>
                 </div>
-                <div class="weui-form-preview__item">
-                    <label class="weui-form-preview__label">图书描述</label>
-                    <span class="weui-form-preview__value">${productInfo.context }</span>
-                </div>
 				<div class="price_loc">
 					<div class="user_loc">
 						<div class="loc_img"></div>
@@ -74,18 +70,31 @@
 					</div>
 				</div>
 			</div>
-			<div class="scroll_img">
-				<div id="lightgallery">
+			<div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">商品描述</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body no-padding">
+                  <div class="mailbox-read-message">
+                  	${productInfo.context }
+                  </div><!-- /.mailbox-read-message -->
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                  <ul class="mailbox-attachments clearfix" id="lightgallery">
 					<c:forEach items="${productInfo.fileSrcs }" var="img">
 						<a href="<%=path%>${img}">
-							<img src="<%=path%>${img}" data-src="holder.js/100px180?text=走丢了Y.Y" alt="图片走丢了">
+							<span class="mailbox-attachment-icon has-img"><img src="<%=path%>${img}" data-src="holder.js/100px100p?text=走丢了Y.Y" alt="图片走丢了"></span>
 						</a>
 					</c:forEach>
-				</div>
-			</div>
-			<div class="container" id="buyBtn">
-				<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal">加入购物车</button>
-			</div>
+                  </ul>
+                </div><!-- /.box-footer -->
+                <div class="box-footer">
+                  <div class="pull-xs-right">
+                    <button class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
+                  </div>
+                  <button class="btn btn-success btn-default" id="collection" data-favorite="${null != favoriteId ? true : false}"><i class="glyphicon ${null != favoriteId ? 'glyphicon-heart' : 'glyphicon-heart-empty'}"></i> 收藏</button>
+                </div><!-- /.box-footer -->
+              </div><!-- /. box -->
 		</div>
 		
 		<!-- Modal -->
@@ -116,14 +125,13 @@
 			</div>
 		</div>
 	</div>
-	<jsp:include page="foot.jsp"></jsp:include>
 		
 		<script src="<%=path %>/js/jquery.min.js"></script>
 		<script src="<%=path %>/bootstrap/js/bootstrap.js"></script>
 		<script src="<%=path %>/js/lightgallery.js"></script>
 		<script src="<%=path%>/js/holder.js"></script>
 		<script src="<%=path%>/js/alertify.js"></script>
-		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script src="<%=path%>/js/jweixin-1.0.0.js"></script>
 		<script src="<%=path%>/js/share.js"></script>
 		<script type="text/javascript">
 			// 获取链接参数
@@ -161,7 +169,7 @@
 				     // 其他分享链接
 				　　　　success: function(){
 						$.ajax({
-				            data: {firstShareUserId: firstShareUserId || '${sessionScope.userInfo.userId}', shareUserId: firstShareUserId && '${sessionScope.userInfo.userId}'},
+				            data: firstShareUserId || {firstShareUserId : '${sessionScope.userInfo.userId}', shareUserId: firstShareUserId} && {firstShareUserId : '${sessionScope.userInfo.userId}'},
 				            type: "GET",
 				            dataType: 'json',
 				            url:  "<%=path%>/updateUserPoints",
@@ -181,12 +189,31 @@
 				}                         
 			});
 			
-			$(".nav_btn").click(function(event) {
-				/* Act on the event */
-				$(".nav_pane").toggle().css('height', $("body").height());
-				$(".bottom").toggle();
+			$('#lightgallery').lightGallery();
+			
+			<!-- 添加收藏 -->
+			$('#collection').on('click', function(){
+				var $collection = $(this),  isFavorite = $collection.data("favorite");
+				$.ajax({
+					data: {bookId: '${productInfo.productId}', isFavorite: isFavorite},
+		            type: "GET",
+		            dataType: 'json',
+		            url:  "<%=path%>/updateUserFavorite",
+		            success: function (result) {
+		            	if(result.type == "success") {
+		            		if(isFavorite) {
+		            			$('i', $collection).attr("class", "glyphicon glyphicon-heart-empty");
+		            			$collection.data("favorite", false);
+		            		}else {
+		            			$('i', $collection).attr("class", "glyphicon glyphicon-heart");	
+		            			$collection.data("favorite", true);
+		            		}
+		            	} else {
+		            		alertify.error(result.msg);
+		            	}
+		            }
+		        });
 			});
-			lightGallery(document.getElementById('lightgallery'));
 			
 			<!--quantity-->
 			$('.value-plus').on('click', function(){

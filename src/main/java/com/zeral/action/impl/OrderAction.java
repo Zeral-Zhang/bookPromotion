@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +31,18 @@ public class OrderAction implements IOrderAction {
 	@RequestMapping(value = "/addOrder", method = RequestMethod.GET)
 	public String addOrder(HttpServletResponse response) {
 		HttpSession session = WebUtil.getSession();
+		Boolean isUsePoint = false;
 		try {
 			MyCar myCar = (MyCar) session.getAttribute("mycar");
 			UserInfo user = (UserInfo) session.getAttribute("userInfo");
 			if (null == user) {
 				response.sendRedirect(HttpsUtil.AuthLogin(BookPromotionConstant.VALIDATE_URL, "addOrder"));
 			}
-			// 购买成功，商品数量减少
-			orderMainService.saveOrderAndReomveProduct(myCar, user);
+			if(StringUtils.isNotBlank(WebUtil.getRequest().getParameter("userPoint"))) {
+				isUsePoint = true;
+			}
+			// 购买成功，积分兑换，商品数量减少
+			orderMainService.saveOrderAndReomveProduct(myCar, user, isUsePoint);
 			session.removeAttribute("mycar");
 			return "shopCar";
 		} catch (Exception e) {

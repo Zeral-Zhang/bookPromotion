@@ -32,12 +32,27 @@ public class Favorite implements java.io.Serializable {
 	private String userInfoId;
 	private Date createDate;
 	private String context;
+	
+	
+	private String productId;
 
 	// Constructors
 
 	/** default constructor */
 	public Favorite() {
 	}
+	
+	
+
+	public Favorite(String userInfoId, Date createDate, String context, String productId) {
+		super();
+		this.userInfoId = userInfoId;
+		this.createDate = createDate;
+		this.context = context;
+		this.productId = productId;
+	}
+
+
 
 	// Property accessors
 	@Id
@@ -53,13 +68,22 @@ public class Favorite implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id", nullable = false)
+	@JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
 	public ProductInfo getProductInfo() {
 		return this.productInfo;
 	}
 
 	public void setProductInfo(ProductInfo productInfo) {
 		this.productInfo = productInfo;
+	}
+	
+	@Column(name = "product_id")
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	@Column(name = "user_id",  nullable = false)

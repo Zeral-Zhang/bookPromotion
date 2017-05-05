@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.zeral.bean.MyCar;
 import com.zeral.bean.PageBean;
 import com.zeral.bean.ShopCarItem;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.dao.BaseDao;
 import com.zeral.dao.OrderMainDao;
 import com.zeral.po.OrderDetail;
@@ -20,6 +21,7 @@ import com.zeral.po.ProductInfo;
 import com.zeral.po.UserInfo;
 import com.zeral.service.IOrderMainService;
 import com.zeral.service.IProductInfoService;
+import com.zeral.service.IUserService;
 
 @Service
 public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements IOrderMainService {
@@ -30,6 +32,8 @@ public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements 
 	private OrderMainDao orderMainDao;
 	@Autowired
 	private IProductInfoService productInfoService;
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	public List<OrderMain> findAllMain(String userId, PageBean pageBean) {
@@ -81,17 +85,28 @@ public class OrderMainServiceImpl extends BaseServiceImpl<OrderMain> implements 
 	}
 
 	@Override
-	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user) {
-		saveOrder(myCar, user);
+	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user, Boolean isUsePoint) {
+		// 使用积分，减少总价，消除积分
+		if(isUsePoint) {
+			myCar.setSumPrice(myCar.getSumPrice()-user.getUserDetailInfo().getUserPoints());
+			// 保存订单
+			saveOrder(myCar, user);
+			// 消除积分
+			user.getUserDetailInfo().setUserPoints(0);
+			userService.updateUser(user.getUserDetailInfo());
+		} else {
+			// 保存订单
+			saveOrder(myCar, user);
+		}
+		// 更新商品状态
 		Map<String, ShopCarItem> items = myCar.getItems();
 		for (String productInfoId : items.keySet()) {
 			ProductInfo product = productInfoService.findDetail(productInfoId);
 			product.setNumber(product.getNumber() - items.get(productInfoId).getNum());
 			if(product.getNumber().equals(0)) {
-				productInfoService.delete(productInfoId);
-			} else {
-				productInfoService.update(product);
+				product.setState(BookPromotionConstant.SOLD_OUT);
 			}
+			productInfoService.update(product);
 		}
 	}
 }

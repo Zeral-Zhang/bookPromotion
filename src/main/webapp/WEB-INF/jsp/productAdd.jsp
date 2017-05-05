@@ -76,21 +76,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="weui-cells__title">图书状态</div>
-				<div class="weui-cells">
-					<div class="weui-cell weui-cell_select weui-cell_select-before">
-						<div class="weui-cell__hd">
-							<select style="width: 300px;" class="weui-select" name="state">
-								<optgroup label="请选择：">
-									<option value="0">不可用</option>
-									<option value="1">未上架</option>
-									<option value="2">上架</option>
-									<option value="3">缺货</option>
-								</optgroup>
-							</select>
-						</div>
-					</div>
-				</div>
 				<div class="weui-cells__title">图书描述</div>
 				<div class="weui-cells weui-cells_form">
 		            <div class="weui-cell">
@@ -121,7 +106,7 @@
 			                            <ul class="weui-uploader__files" id="uploaderFiles">
 			                            	<div class="weui-uploader__input-box">
 			                            	<!-- 微信安卓多图上传存在兼容性问题， 暂时去掉multiple -->
-			                                	<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*"  />
+			                                	<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="multiple" />
 			                           		</div>
 			                            </ul>
 			                        </div>

@@ -1,11 +1,18 @@
 package com.zeral.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zeral.bean.AccessToken;
+import com.zeral.bean.PageBean;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.dao.BaseDao;
+import com.zeral.dao.FavoriteDao;
 import com.zeral.dao.UserDetailInfoDao;
+import com.zeral.po.Favorite;
 import com.zeral.po.UserDetailInfo;
 import com.zeral.po.UserInfo;
 import com.zeral.service.IBasicConfigService;
@@ -20,6 +27,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements 
 	private ISchoolInfoService schoolInfoService;
 	@Autowired
 	private IBasicConfigService basicConfigService;
+	@Autowired
+	private FavoriteDao favoriteDao;
 
 	public UserDetailInfo findUserDetail(String openId) {
 		return userInfoDao.findByUserId(openId);
@@ -67,5 +76,35 @@ public class UserServiceImpl extends BaseServiceImpl<UserDetailInfo> implements 
 	@Override
 	public BaseDao<UserDetailInfo, String> getDao() {
 		return userInfoDao;
+	}
+
+	@Override
+	public void removeFavorite(String productId, String userId) {
+		favoriteDao.deleteByProductIdAndUserId(productId, userId);
+	}
+
+	@Override
+	public void addFavorite(String productId, String userId) {
+		Favorite favorite = new Favorite();
+		favorite.setUserInfoId(userId);
+		favorite.setProductId(productId);
+		favorite.setCreateDate(new Date());
+		favoriteDao.save(favorite);
+	}
+
+	@Override
+	public Favorite findFavorite(String productId, String userId) {
+		return favoriteDao.findByProductIdAndUserId(productId, userId);
+	}
+
+	@Override
+	public List<Favorite> findFavorites(PageBean pageBean, String userId) {
+		String hql = "from Favorite where userInfoId = ? and productInfo.state = " + BookPromotionConstant.SALLING;
+		return favoriteDao.findByHQL(hql, pageBean, userId);
+	}
+
+	@Override
+	public void removeFavorite(String favoriteId) {
+		favoriteDao.delete(favoriteId);
 	}
 }

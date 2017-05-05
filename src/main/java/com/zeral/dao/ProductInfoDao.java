@@ -6,6 +6,7 @@ import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import com.zeral.bean.PageBean;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.po.ProductInfo;
 
 @Repository("ProductInfoDAO")
@@ -48,7 +49,7 @@ public class ProductInfoDao extends BaseDao<ProductInfo, String> {
 	public List<ProductInfo> findByUserSchoolInfoId(PageBean pageBean, String schoolInfoId) {
 		String sql = "select product.* from product_info product LEFT JOIN user_detail_info detail ON product.user_id = detail.user_id " +
 				"LEFT JOIN school_info school ON school.school_info_id = detail.school_info_id " +
-				"WHERE school.school_info_id IN (SELECT school_info_id FROM school_info WHERE school_info.p_code = (SELECT school_info.code from school_info WHERE school_info.school_info_id=?)) ORDER BY product.pb_date LIMIT ?,?";
+				"WHERE school.school_info_id IN (SELECT school_info_id FROM school_info WHERE school_info.p_code = (SELECT school_info.code from school_info WHERE school_info.school_info_id=?)) and product.state = "+BookPromotionConstant.SALLING+" ORDER BY product.pb_date LIMIT ?,?";
 		SQLQuery query = getCurrentSession().createSQLQuery(sql);
 		query.setParameter(0, schoolInfoId)
 		.setParameter(1, pageBean.getOffset())

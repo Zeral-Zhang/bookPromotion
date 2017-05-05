@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.zeral.action.IProductAction;
 import com.zeral.bean.PageBean;
 import com.zeral.constant.BookPromotionConstant;
+import com.zeral.po.Favorite;
 import com.zeral.po.ProductInfo;
 import com.zeral.po.ProductType;
 import com.zeral.service.IProductInfoService;
@@ -57,6 +58,7 @@ public class ProductAction extends BaseAction implements IProductAction {
 		try {
 			// 添加商品发布日期
 			productInfo.setPbDate(new Date());
+			productInfo.setState(BookPromotionConstant.SALLING);
 			// 给商品添加用户信息
 			productInfo.setUserInfoId(getLoginUser().getUserId());
 			productInfoService.save(productInfo);
@@ -87,7 +89,7 @@ public class ProductAction extends BaseAction implements IProductAction {
 				lsemp = productInfoService.findByNameLike(pageBean, search);
 			} else {
 				// 获取当前页的记录集合
-				lsemp = productInfoService.findAll(pageBean, Order.desc("pbDate"));
+				lsemp = productInfoService.findAllSalling(pageBean);
 			}
 			// 封装数据到PageBean
 			pageBean.setPagelist(lsemp);
@@ -132,6 +134,10 @@ public class ProductAction extends BaseAction implements IProductAction {
 				if(null == getLoginUser()) {
 					return "redirect:"+HttpsUtil.AuthLogin(BookPromotionConstant.VALIDATE_URL, "toProductDetail/"+productId);
 				}
+				Favorite favorite = userService.findFavorite(productId, getLoginUser().getUserId());
+				if(null != favorite) {
+					model.addAttribute("favoriteId", favorite.getFavoriteId());
+				}
 			}
 			return "productDetail";
 		} catch (Exception e) {
@@ -145,7 +151,7 @@ public class ProductAction extends BaseAction implements IProductAction {
 	public void deleProduct(@PathVariable String productId, HttpServletResponse response) {
 		try {
 			if(StringUtils.isNotBlank(productId)) {
-				productInfoService.delete(productId);
+				productInfoService.updateProductState(productId, BookPromotionConstant.UNAVAILABLE);
 			}
 			WebUtil.sendSuccessMsg("删除商品成功", response);
 		} catch (Exception e) {

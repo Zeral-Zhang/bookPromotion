@@ -74,6 +74,10 @@ public class ProductInfo implements java.io.Serializable {
 	private Date pbDate;
 	/**
 	 * 状态
+	 * 0 -- 缺货
+	 * 1 -- 上架
+	 * 2 -- 未上架
+	 * 3 -- 不可用
 	 */
 	private Integer state;
 	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>(0);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zeral.bean.PageBean;
+import com.zeral.constant.BookPromotionConstant;
 import com.zeral.dao.BaseDao;
 import com.zeral.dao.ProductInfoDao;
 import com.zeral.po.ProductInfo;
@@ -53,25 +54,25 @@ public class ProductInfoServiceImpl extends BaseServiceImpl<ProductInfo> impleme
 
 	@Override
 	public List<ProductInfo> findByUserId(PageBean pageBean, String userId) {
-		String hql = "from ProductInfo info where info.userInfoId = ? order by info.pbDate desc";
+		String hql = "from ProductInfo info where info.userInfoId = ? and info.state != "+BookPromotionConstant.UNAVAILABLE+" order by info.pbDate desc";
 		return productInfoDao.findByHQL(hql, pageBean, userId);
 	}
 
 	@Override
 	public List<ProductInfo> findByNameLike(PageBean pageBean, String name) {
-		String hql = "from ProductInfo info where info.productName like ?";
+		String hql = "from ProductInfo info where info.productName like ? and info.state = " + BookPromotionConstant.SALLING;
 		return productInfoDao.findByHQL(hql, pageBean, "%" + name + "%");
 	}
 	
 	@Override
 	public List<ProductInfo> findByTypeAndNameLike(PageBean pageBean, String productTypeId, String name) {
-		String hql = "from ProductInfo info where info.productType.productTypeId = ? and info.productName like ?";
+		String hql = "from ProductInfo info where info.productType.productTypeId = ? and info.productName like ? and info.state = " + BookPromotionConstant.SALLING;
 		return productInfoDao.findByHQL(hql, pageBean, productTypeId, "%" + name + "%");
 	}
 	
 	@Override
 	public List<ProductInfo> findByType(PageBean pageBean, String productTypeId) {
-		String hql = "from ProductInfo info where info.productType.productTypeId = ?";
+		String hql = "from ProductInfo info where info.productType.productTypeId = ? and info.state = " + BookPromotionConstant.SALLING;
 		return productInfoDao.findByHQL(hql, pageBean, productTypeId);
 	}
 
@@ -83,5 +84,17 @@ public class ProductInfoServiceImpl extends BaseServiceImpl<ProductInfo> impleme
 	@Override
 	public BaseDao<ProductInfo, String> getDao() {
 		return productInfoDao;
+	}
+
+	@Override
+	public void updateProductState(String productId, Integer state) {
+		ProductInfo productInfo = findById(productId);
+		productInfo.setState(state);
+	}
+
+	@Override
+	public List<ProductInfo> findAllSalling(PageBean pageBean) {
+		String hql = "from ProductInfo info where info.state = "+BookPromotionConstant.SALLING+" order by info.pbDate desc";
+		return productInfoDao.findByHQL(hql, pageBean);
 	}
 }

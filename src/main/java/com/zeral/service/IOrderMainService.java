@@ -38,7 +38,8 @@ public interface IOrderMainService extends IBaseService<OrderMain> {
 	 * 保存订单并相应移除商品数量
 	 * @param myCar
 	 * @param user
+	 * @param isUsePoint
 	 * @return
 	 */
-	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user);
+	public void saveOrderAndReomveProduct(MyCar myCar, UserInfo user, Boolean isUsePoint);
 }

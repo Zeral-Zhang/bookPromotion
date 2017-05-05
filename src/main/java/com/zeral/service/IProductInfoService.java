@@ -49,4 +49,17 @@ public interface IProductInfoService extends IBaseService<ProductInfo> {
 	 * @return
 	 */
 	public List<ProductInfo> findByUserSchoolInfoId(PageBean pageBean, String schoolInfoId);
+
+	/**
+	 * 通过id查找商品修改其状态
+	 * @param productId
+	 */
+	public void updateProductState(String productId, Integer state);
+
+	/**
+	 * 分页查询所有上架商品
+	 * @param pageBean
+	 * @return
+	 */
+	public List<ProductInfo> findAllSalling(PageBean pageBean);
 }

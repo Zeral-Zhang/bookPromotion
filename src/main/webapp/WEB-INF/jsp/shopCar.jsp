@@ -68,7 +68,7 @@
 											<div class="close1"></div>
 										</div>
 										</td>
-										<td class="invert-image"><a href="toProductDetail.action?productId=${item.key }" ><img src="<%=path %>/${item.value.product.fileSrcs[0]}" data-src="holder.js/80px80p?text=走丢了Y.Y" alt="查看详情" class="img-responsive" /></a></td>
+										<td class="invert-image"><a href="<%=path %>/toProductDetail/${item.key }" ><img src="<%=path %>${item.value.product.fileSrcs[0]}" data-src="holder.js/80px80p?text=走丢了Y.Y" alt="查看详情" class="img-responsive" /></a></td>
 										<td class="invert">
 										<div class="quantity">
 											<div class="quantity-select">
@@ -113,6 +113,9 @@
 				</div>
 			</div>
 			<c:if test="${not empty sessionScope.mycar and not empty sessionScope.mycar.items}">
+				<div class="pull-left">
+					<p>你可以使用${sessionScope.userInfo.userDetailInfo.userPoints}积分抵${sessionScope.userInfo.userDetailInfo.userPoints}元钱：<input id="point" type="checkbox" class="entry value"></p>
+			    </div>
 				<!-- //check out -->
 				<div align="center">
 					<a class="btn btn-success btn-default pull-left" data-toggle="modal" href="#myModal"><span class="glyphicon glyphicon-credit-card"></span>付款</a>
@@ -131,7 +134,7 @@
 			          <p>合计：￥${sessionScope.mycar.sumPrice}</p>
 			        </div>
 			        <div class="modal-footer">
-			          <a href="<%=path %>/addOrder" id="" class="btn btn-success btn-default">确认</a>
+			          <a href="<%=path %>/addOrder" class="btn btn-success btn-default">确认</a>
 			          <a href="javascript:;" class="btn btn-danger btn-default" data-dismiss="modal">取消</a>
 			        </div>
 			      </div>
@@ -146,12 +149,20 @@
 	<script src="<%=path %>/js/jquery.min.js"></script>
 	<script src="<%=path %>/js/holder.min.js"></script>
 	<script src="<%=path %>/js/alertify.min.js"></script>
-	<!-- cart -->
-	<script src="<%=path %>/js/simpleCart.min.js"></script>
 	<!-- for bootstrap working -->
 	<script type="text/javascript" src="<%=path %>/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript">
 		$(function() {
+			$('#point').click(function(){
+		        if($(this).prop("checked")) {
+		            $("#myModal .modal-body p").text("合计：￥${sessionScope.mycar.sumPrice-sessionScope.userInfo.userDetailInfo.userPoints}");
+		            $("#myModal .modal-footer a").first().attr("href", "<%=path %>/addOrder?userPoint=true");
+		        }
+		        else {
+		        	$("#myModal .modal-body p").text("合计：￥${sessionScope.mycar.sumPrice}");
+		            $("#myModal .modal-footer a").first().attr("href", "<%=path %>/addOrder");
+		        }
+		    });
 			$('.close1').on('click', function() {
 				var productId = $(this).closest(".rem1").attr("id");
 				$.ajax({

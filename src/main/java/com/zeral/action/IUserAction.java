@@ -74,4 +74,24 @@ public interface IUserAction {
 	 */
 	String toUserPayed(PageBean pageBean);
 	
+	/**
+	 * 初始化用户收藏列表
+	 * @return
+	 */
+	String toUserFavorite(PageBean pageBean);
+
+	/**
+	 * 用户收藏或者取消收藏商品
+	 * @param request
+	 * @param response
+	 */
+	void updateUserFavorite(HttpServletRequest request, HttpServletResponse response);
+
+	/**
+	 * 删除用户收藏
+	 * @param favoriteId
+	 * @param response
+	 */
+	void deleteFavorite(String favoriteId, HttpServletResponse response);
+	
 }

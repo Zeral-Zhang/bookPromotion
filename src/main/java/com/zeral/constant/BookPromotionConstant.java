@@ -40,4 +40,22 @@ public class BookPromotionConstant {
 	 * 凭证超时时间
 	 */
 	public static final String TOKEN_EXPIREIN_TIME = "tokenExpiresInTime";
+	
+	
+	/**
+	 * 商品售罄
+	 */
+	public static final Integer SOLD_OUT = 0;
+	/**
+	 * 商品上架
+	 */
+	public static final Integer SALLING = 1;
+	/**
+	 * 商品未上架
+	 */
+	public static final Integer UN_SALLING = 2;
+	/**
+	 * 商品不可用
+	 */
+	public static final Integer UNAVAILABLE = 3;
 }
